@@ -1,0 +1,22 @@
+useDynLib(SuperExactTest, .registration = TRUE)
+#exportPattern("^[[:alpha:]]+")
+import(methods)
+import(grid)
+export(
+	supertest,
+	cpsets,
+	dpsets,
+	MSET,
+	jaccard,
+	intersect,
+	plot.msets,
+	union,
+	intersectElements,
+	deBarcode
+)
+S3method(print, msets)
+S3method(plot, msets)
+S3method(summary, msets)
+S3method(print, summary.msets)
+importFrom("grDevices", "axisTicks", "heat.colors")
+importFrom("graphics", "par")

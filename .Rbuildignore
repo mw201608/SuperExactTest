@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+ex1.png
+_config.yml
+README.md
+R/setdiff.R
+man/cdiff.Rd
+src/pdiff.c
+src/pone.c

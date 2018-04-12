@@ -1,0 +1,4 @@
+R/setdiff.R
+man/cdiff.Rd
+src/pdiff.c
+src/pone.c

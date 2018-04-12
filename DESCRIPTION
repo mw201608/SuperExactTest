@@ -1,0 +1,13 @@
+Package: SuperExactTest
+Type: Package
+Title: Exact Test and Visualization of Multi-Set Intersections
+Version: 1.0.2
+Date: 2018-04-12
+Author: Minghui Wang, Yongzhong Zhao and Bin Zhang
+Maintainer: Minghui Wang <minghui.wang@mssm.edu>
+Contact: Minghui Wang <minghui.wang@mssm.edu>, Bin Zhang <bin.zhang@mssm.edu>
+Description: Identification of sets of objects with shared features is a common operation in all disciplines. Analysis of intersections among multiple sets is fundamental for in-depth understanding of their complex relationships. This package implements a theoretical framework for efficient computation of statistical distributions of multi-set intersections based upon combinatorial theory, and provides multiple scalable techniques for visualizing the intersection statistics. The statistical algorithm behind this package was published in Wang et al. (2015) <doi:10.1038/srep16923>.
+License: GPL-3
+Depends: grid (>= 3.1.0), methods, R (>= 3.1.0)
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr

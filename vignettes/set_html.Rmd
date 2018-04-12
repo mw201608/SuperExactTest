@@ -1,0 +1,150 @@
+---
+title: "Multi-set Intersection Analysis Using SuperExactTest"
+author: "Minghui Wang, Yongzhong Zhao, Bin Zhang"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SuperExactTest User Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8](inputenc)
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+```
+
+## Scope
+
+This guide provides an overview of using the `R` package `SuperExactTest` for statistical testing and visualization of mult-set intersections.
+In this package, we implemented a theoretical framework for computing the exact statistical distributions of multi-set intersections (Wang et al 2015).
+Utilizing a forward algorithm based procedure with the computational complexity linear to the number of sets, we are able to efficiently calculate the intersection probability among a large number of sets.
+Multiple efficient and scalable visualization techniques are provided for illustrating multi-set intersections and the corresponding intersection statistics.
+
+## Citing `SuperExactTest`
+If you use the `SuperExactTest` package, please cite the following paper:
+
+Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. _Scientific Reports_ 5: 16923.
+
+## Case study
+
+We demonstrate the utility of the package through analyzing multiple sets of expression quantitative trait loci (eQTLs) identified from several tissues.
+eQTLs are the genomic loci (as represented by genetic variants in practice) that regulate the gene expression.
+Identifying expression regulators is considered a powerful tool in dissecting the architecture of the genetics of disease and other complex phenotypes.
+It is widely believed that the gene expression regulation are both spatially (cell-type and tissue specificity) and temporally (different developmental stages).
+
+As an example, we downloaded four sets of genes with *cis*-eQTLs (i.e. gene expression regulated by local genetic variants) detected in four different brain regions (Gibbs et al 2010)
+which had been deposited in the eQTL Browser database (http://www.ncbi.nlm.nih.gov/projects/gap/eqtl/index.cgi) and performed statistical analyses of the intersections among the gene sets.
+For convenience, we pre-compiled the *cis*-eQTL genes into a list which has been included in the present package. After loading the package, the pre-compiled dataset can be imported as follows:
+```{r}
+library("SuperExactTest")
+data("eqtls")
+```
+The loaded data object is a list called `cis.eqtls` which contains four vectors of gene symbols. To check the structure of the imported object, we can use command:
+```{r}
+str(cis.eqtls)
+```
+The names of the gene sets preserve the brain tissue information: CB (cerebellum), FC (frontal cortex), TC (temporal cortex) and PONS (pons region).
+It needs to be stressed that these *cis*-eQTL gene sets were detected from genome-wide gene expression profiling of 18,196 unique genes (Gibbs et al 2010).
+
+The length of the *cis*-eQTL gene sets varies from 101 to 164:
+```{r}
+(length.gene.sets=sapply(cis.eqtls,length))
+```
+Assuming the *cis*-eQTL gene sets were independently and randomly sampled from the population of 18,196 unique genes profiled in the eQTL study,
+the probability of the number of common genes shared by the four *cis*-eQTL gene sets can be computed using function `dpsets`
+which implements the exact probability calculation of multi-set intersection developed in this study.
+Before we perform the statistical test of the intersection among the four gene sets, let us firstly calculate the expected overlap size:
+```{r}
+total=18196
+(num.expcted.overlap=total*do.call(prod,as.list(length.gene.sets/total)))
+```
+Due to the large background population gene size whereas small gene set sizes, the expected intersection size is close to 0.
+It is obvious that the possible number of genes shared among the four *cis*-eQTL gene sets is from 0 to 101.
+We can compute the probability density distribution of the possible intersection sizes using the `dpsets` function:
+```{r}
+(p=sapply(0:101,function(i) dpsets(i, length.gene.sets, n=total)))
+```
+In the function call of `dpsets`, the first argument is the intersection size, the second argument is a vector of the set sizes,
+and option $n$ specifies the size of the background gene population from which the gene sets are collected.
+As expected, the probability density is maximized at intersection size 0 and decreases as the intersection size increases.
+
+Next, we compute the observed intersection among the four gene sets and then the corresponding fold enrichment (FE) by:
+
+```{r}
+common.genes=intersect(cis.eqtls[[1]], cis.eqtls[[2]], cis.eqtls[[3]],
+ cis.eqtls[[4]])
+(num.observed.overlap=length(common.genes))
+(FE=num.observed.overlap/num.expcted.overlap)
+```
+
+Note that we re-implement the built-in `R` function `intersect` to make it capable of handling more than two input vectors.
+
+The probability density of the observed intersection size is therefore:
+```{r}
+dpsets(num.observed.overlap, length.gene.sets, n=total)
+```
+The probability of observing 56 or more intersection genes can be calculated using the cumulative probability function `cpsets`:
+```{r}
+cpsets(num.observed.overlap-1, length.gene.sets, n=total, lower.tail=FALSE)
+```
+Like function `dpsets`, `cpsets` takes similar arguments as input, with an additional argument `lower.tail` specifying which of the one-tail probabilities to be returned.
+`num.observed.overlap - 1` because the probability is $P(X \leq x)$ when `lower.tail = TRUE` while $P(X > x)$ when `lower.tail = FALSE`.
+
+The extremly low one-tail probability (0 due to computation precision) of the observed intersection size underlies significant overlap of common *cis* regulators across four brain regions in the present *cis*-eQTL dataset,
+rejecting the null hypothesis that the *cis*-eQTL gene sets were independent random samples from the population of 18,196 unique genes profiled.
+
+Alternative to finding intersection and statistical test sequentially, we also implement a function `MSET` to perform the intersection operation and probability calculation in one go:
+```{r}
+fit=MSET(cis.eqtls, n=total, lower.tail=FALSE)
+fit$FE
+fit$p.value
+```
+### Analyzing all possible intersections among four *cis*-eQTLs gene sets
+In the above, we analyzed one specific intersection that is shared by all four gene sets. In practice, we may be also interested in the intersections among any combinations of the gene sets, such as overlap among any two or three gene sets in this case.
+To facilitate a comprehensive analysis of $2^n-1$ possible intersections for $n$ sets, we designed a function `supertest` to enumerate all possible intersections given a list of input vectors
+and perform the statistical tests of the intersections automatically. Again we illustrate the function usage with the four *cis*-eQTL gene sets:
+```{r}
+res=supertest(cis.eqtls, n=total)
+```
+
+The returned variable `res` is an object of new `S3` class `"msets"` which is a specifically designed list holding the analysis results and can be processed by generic functions including `plot` and `summary`.
+For example, to visualize the analysis result, we can plot the analysis results in a circular layout as shown in the following figure:
+
+```{r fig1, fig.width = 5, fig.height = 5, fig.cap = "A circular plot visualizing all possible intersections and the corresponding statistics amongst *cis*-eQTL gene sets."}
+plot(res, sort.by="size")
+```
+
+The four tracks in the middle represent the four gene sets, with individual blocks showing "presence" (green) or "absence" (grey) of the gene sets in each intersection.
+The height of the bars in the outer layer is proportional to the intersection sizes, as indicated by the numbers on the top of the bars. The color intensity of the bars represents the P value significance of the intersections.
+
+As the option name suggests, `sort.by="size"` instructs the intersections to be sorted by size. Users are flexible to use different color schemes or sort intersections by P value, set, size or degree.
+The complete control options can be obtained from the help documentation by command `help("plot.msets")`.
+For example, we can visualize the results in a landscape (matrix) layout as shown in Figure which includes only intersections among 2 to 4 sets by option `degree = 2:4`:
+
+```{r fig2, fig.width = 9, fig.height = 4, fig.cap = "A bar chart illustrating all possible intersections among *cis*-eQTL gene sets in a matrix layout."}
+plot(res, Layout="landscape", degree=2:4, sort.by="size", y.pos=c(0.025,0.95))
+```
+
+The matrix of solid and empty circles at the bottom illustrates the "presence" (solid green) or "absence" (empty) 
+of the gene sets in each intersection. The numbers to the right of the matrix are set sizes. The colored bars on the top of the matrix represent the intersection sizes with the color intensity showing the P value significance.
+
+
+The generic `summary` function can be used to summarize the analysis results in details:
+```{r}
+summary(res)
+```
+The main output from the `summary` function is a data.frame, with each row representing an intersection and its corresponding test statistics.
+Details about the `summary` function output are available from the help documentation:
+```{r, eval=FALSE}
+?summary.msets
+```
+To tabulate the `summary` result into a file, use command:
+```{r, eval=FALSE}
+write.csv(summary(res)$Table, file="summary.table.csv", row.names=FALSE)
+```
+
+# References
+Gibbs et al. (2010) Abundant Quantitative Trait Loci Exist for DNA Methylation and Gene Expression in Human Brain. PLoS Genetics 6: e1000952.
+
+Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. Scientific Reports 5: 16923.
