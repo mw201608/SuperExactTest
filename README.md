@@ -15,5 +15,17 @@ However, the one on `CRAN` may be some versions behind the current development. 
 Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.
 
 
-### Example plot
+### Example
+```
+set.seed(1234)
+#generate random strings
+n=400
+random_strings <- do.call(paste0, replicate(5, sample(LETTERS, n, TRUE), FALSE))
+input=lapply(c(40,60,80,200),function(x,random_strings) sample(random_strings,x),random_strings=random_strings)
+Result=supertest(input,n=n)
+#plot the intersection with a split y-axis, showing elements of the intersections whose size is no larger than 20
+plot(Result, Layout="landscape", sort.by="size", keep=FALSE, bar.split=c(70,180), 
+	show.elements=TRUE, elements.maximum=20, elements.cex=0.7,
+	x.pos=c(0.1,0.95), y.pos=c(0.025,0.95))
+```
 ![Sample output](ex1.png)
