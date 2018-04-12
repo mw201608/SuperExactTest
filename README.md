@@ -12,8 +12,7 @@ However, the one on `CRAN` may be some versions behind the current development. 
 
 
 ### Reference
-Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.
-
+[Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.](https://www.nature.com/articles/srep16923)
 
 ### Example
 ```
