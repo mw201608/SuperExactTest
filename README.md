@@ -22,7 +22,7 @@ n=400
 r_strings <- do.call(paste0, replicate(5, sample(LETTERS, n, TRUE), FALSE))
 input=lapply(c(40,60,80,200),function(x,s) sample(s,x),s=r_strings)
 Result=supertest(input,n=n)
-#plot the intersection with a split y-axis
+#plot the intersections with a split y-axis
 #show elements of the intersections with size no larger than 20
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	bar.split=c(70,180), show.elements=TRUE, elements.maximum=20,
