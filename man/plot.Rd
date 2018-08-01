@@ -68,6 +68,7 @@
  \item \code{elements.rot}, numeric; the angle to rotate the text of overlapping elements. Default 45.
  \item \code{elements.col}, colour for overlapping element text.
  \item \code{elements.maximum}, maximum number of elements to show.
+ \item \code{intersection.size.rotate}, logic, whether to rotate the text of intersection size.
  }
 }
 \value{

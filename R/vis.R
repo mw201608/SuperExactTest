@@ -243,6 +243,7 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	sort.by = match.arg(sort.by)
 	Args=list(...)
 	cex=ifelse(is.null(Args$cex),0.8,Args$cex)
+	intersection.size.rotate=ifelse(is.null(Args$intersection.size.rotate),TRUE,Args$intersection.size.rotate)
 	#set color scheme
 	if(is.null(Args$heatmapColor)){
 		heatmapColor = rev(heat.colors(50)[1:50])
@@ -288,6 +289,7 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	degreeStart=(c(1:nO)-1)*degreeUnit
 	degreeEnd=(c(1:nO))*degreeUnit
 	degree.gap=max(degreeUnit*gap.within.track,2*pi/360)
+	char.size=as.numeric(convertUnit(stringHeight('o'), "npc", "y"))
 
 	fill.col=rep(c('#dddddd','#999999'),length.out=nSet)
 	#plot tracks
@@ -316,8 +318,8 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 		grid.polygon(pos.x, pos.y,gp=gpar(fill = heatmapColor[cid[i]],col=1)) #bar height is proportional to the intersection size
 		#text intersection size
 		if(show.overlap.size==TRUE){
-			XY3=sapply(seq(degreeStart[i],degreeEnd[i]-degree.gap,length.out=4), function(deg) getXY(origin,width.sets+pos.size+bar.width.unit*otab[i],deg))
-			grid.text(otab0[i],mean(XY3[1,]),mean(XY3[2,]),rot=degreeStart[i]*radial2deg,just='left',gp=gpar(cex=overlap.size.cex))
+			XY3=sapply(seq(degreeStart[i],degreeEnd[i]-degree.gap,length.out=4), function(deg) getXY(origin,width.sets+pos.size+bar.width.unit*otab[i]+char.size,deg))
+			grid.text(otab0[i],mean(XY3[1,]),mean(XY3[2,]),rot=ifelse(intersection.size.rotate,(degreeStart[i]-pi/2)*radial2deg,0),just='center',gp=gpar(cex=overlap.size.cex))
 		}
 	}
 	#track number (numbering the legends)
