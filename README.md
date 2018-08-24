@@ -14,6 +14,9 @@ However, the one on `CRAN` may be some versions behind the current development. 
 ### Reference
 [Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.](https://www.nature.com/articles/srep16923)
 
+### Vignette
+Detailed description about the package and sample analysis code is available from `vignette("set_html",package="SuperExactTest")` ([link](examples/set_html.Md)) after installation.
+
 ### Example
 ```
 set.seed(1234)
@@ -24,10 +27,10 @@ input=lapply(c(40,60,80,200),function(x,s) sample(s,x),s=r_strings)
 Result=supertest(input,n=n)
 #plot the intersections with a split y-axis
 #show elements of the intersections with no more than 20 elements
-#png('ex1.png',width=2000,height=2000,res=300)
+#png('examples/ex1.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
 	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20))
 #dev.off()
 ```
-<img src="ex1.png" width="600" alt="sample output" />
+<img src="examples/ex1.png" width="600" alt="sample output" />
