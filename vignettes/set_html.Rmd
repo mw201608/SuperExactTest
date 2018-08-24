@@ -112,7 +112,7 @@ The returned variable `res` is an object of new `S3` class `"msets"` which is a 
 For example, to visualize the analysis result, we can plot the analysis results in a circular layout as shown in the following figure:
 
 ```{r fig1, fig.width = 5, fig.height = 5, fig.cap = "A circular plot visualizing all possible intersections and the corresponding statistics amongst *cis*-eQTL gene sets."}
-plot(res, sort.by="size")
+plot(res, sort.by="size", margin=c(2,2,2,2), color.scale.pos=c(0.85,1), legend.pos=c(0.9,0.15))
 ```
 
 The four tracks in the middle represent the four gene sets, with individual blocks showing "presence" (green) or "absence" (grey) of the gene sets in each intersection.
@@ -123,7 +123,7 @@ The complete control options can be obtained from the help documentation by comm
 For example, we can visualize the results in a landscape (matrix) layout as shown in Figure which includes only intersections among 2 to 4 sets by option `degree = 2:4`:
 
 ```{r fig2, fig.width = 9, fig.height = 4, fig.cap = "A bar chart illustrating all possible intersections among *cis*-eQTL gene sets in a matrix layout."}
-plot(res, Layout="landscape", degree=2:4, sort.by="size", y.pos=c(0.025,0.95))
+plot(res, Layout="landscape", degree=2:4, sort.by="size", margin=c(0.5,5,1,2))
 ```
 
 The matrix of solid and empty circles at the bottom illustrates the "presence" (solid green) or "absence" (empty) 
