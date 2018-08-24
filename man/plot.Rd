@@ -31,7 +31,7 @@
  \item{ylim}{the limits c(y1, y2) of plotting overlap size.}
  \item{log.scale}{logical; whether to plot with log transformed intersection sizes.}
  \item{yfrac}{numeric; the fraction (0 to 1) of canvas used for plotting bars. Only used for \code{landscape} Layout.}
- \item{margin}{numeric; a vector of 4 numeric values specifying the margins (bottom, left, top, & right) in unit of "lines". Default c(1,1,1,1)+0.1 for \code{circular} Layout and c(1,5,1,1)+0.1 for \code{landscape} Layout. Increase margin if the plot area is cropped.}
+ \item{margin}{numeric; a vector of 4 numeric values specifying the margins (bottom, left, top, & right) in unit of "lines". Default c(1,1,1,1)+0.1 for \code{circular} Layout and c(0.5,5,1.5,2)+0.1 for \code{landscape} Layout. Increase margin if the plot area is cropped.}
  \item{color.scale.pos}{numeric; x and y coordinates (0 to 1) for packing the color scale guide. It could be a keyword "\code{topright}" or "\code{topleft}" in the \code{landscape} layout, and one of "\code{topright}", "\code{topleft}", "\code{bottomright}" and "\code{bottomleft}" in the \code{circular} layout.}
  \item{legend.pos}{numeric; x and y coordinates (0 to 1) for packing the legend in the \code{circular} layout. It could be one of the keywords "bottomright", "bottomleft", "topleft" and "topright".}
  \item{legend.col}{integer; number of columns of the legend in the \code{circular} layout.}

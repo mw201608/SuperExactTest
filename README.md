@@ -23,9 +23,11 @@ r_strings <- do.call(paste0, replicate(5, sample(LETTERS, n, TRUE), FALSE))
 input=lapply(c(40,60,80,200),function(x,s) sample(s,x),s=r_strings)
 Result=supertest(input,n=n)
 #plot the intersections with a split y-axis
-#show elements of the intersections with size no larger than 20
+#show elements of the intersections with no more than 20 elements
+#png('ex1.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
-	bar.split=c(70,180), show.elements=TRUE, elements.maximum=20,
-	elements.cex=0.7, x.pos=c(0.1,0.95), y.pos=c(0.025,0.95))
+	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
+	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20))
 ```
 <img src="ex1.png" width="600" alt="sample output" />
+#dev.off()

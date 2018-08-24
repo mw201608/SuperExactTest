@@ -73,7 +73,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	if(show.elements){
 		sumtable=Args$elements.list
 		if(is.null(sumtable)){
-			summary(x,degree=degree)$Table
+			sumtable=summary(x,degree=degree)$Table
 		}else{
 			if(!any(colnames(sumtable)=='Elements')) stop('elements.list must be a data.frame or matrix with one column named "Elements"\n')
 		}
@@ -81,7 +81,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	#start plotting
 	if(new.gridPage) grid.newpage()
 	#arrange layout
-	if(is.null(margin)) margin=c(1,5,1,1)+0.1
+	if(is.null(margin)) margin=c(0.5,5,1.5,2)+0.1
 	top.vp <- viewport(layout=grid.layout(4, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[3], ceiling(yfrac*100),100-ceiling(yfrac*100), margin[1]), c("lines", "null", "null", "lines"))))
 	marginb <- viewport(layout.pos.col = 2, layout.pos.row = 4, name = "marginb")
 	marginl <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginl")
@@ -163,10 +163,11 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			}
 			atVal[i]=ytop
 		}
+		char.size.w=convertUnit(stringWidth('0'), "npc", "x",valueOnly=TRUE)
 		yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
 		grid.lines(x = c(0),y = c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white'))
-		grid.lines(x = c(0,-0.1),y = (bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
-		grid.lines(x = c(0,-0.1),y = (bar.split[1]-ylim[1])*h+char.size.h/3,gp=gpar(col='grey'))
+		grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
+		grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h+char.size.h/3,gp=gpar(col='grey'))
 	}else{
 		yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
 	}
