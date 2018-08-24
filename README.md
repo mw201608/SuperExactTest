@@ -28,6 +28,6 @@ Result=supertest(input,n=n)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
 	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20))
-```
 #dev.off()
+```
 <img src="ex1.png" width="600" alt="sample output" />
