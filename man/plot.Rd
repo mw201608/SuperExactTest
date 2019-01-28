@@ -58,6 +58,7 @@
  \item \code{heatmapColor}, a vector of customized heat colors.
  \item \code{cex}, scale of text font size.
  \item \code{cex.lab}, scale of axis label text font size.
+ \item \code{show.track.id}, logic, whether to show the track id in the \code{circular} layout. Default \code{TRUE}.
  \item \code{phantom.tracks}, number of phantom tracks in the middle in the \code{circular} layout. Default 2.
  \item \code{gap.within.track}, ratio of gap width over block width on the same track. Default 0.1.
  \item \code{gap.between.track}, ratio of gap width over track width. Default 0.1.
