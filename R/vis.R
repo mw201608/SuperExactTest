@@ -258,6 +258,7 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	sort.by = match.arg(sort.by)
 	Args=list(...)
 	cex=ifelse(is.null(Args$cex),0.8,Args$cex)
+	show.track.id=if(is.null(Args$show.track.id),TRUE,Args$show.track.id)
 	intersection.size.rotate=ifelse(is.null(Args$intersection.size.rotate),TRUE,Args$intersection.size.rotate)
 	#set color scheme
 	if(is.null(Args$heatmapColor)){
@@ -336,7 +337,7 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 		}
 	}
 	#track number (numbering the legends)
-	for(j in 1:nSet){
+	if(show.track.id) for(j in 1:nSet){
 		XY1=sapply(seq(degreeStart[1],degreeEnd[1]-degree.gap,length.out=40), function(deg) getXY(origin,(j+track.offset-1)*track.width,deg))
 		XY2=sapply(seq(degreeStart[1],degreeEnd[1]-degree.gap,length.out=40), function(deg) getXY(origin,(j+track.offset)*track.width,deg))
 		grid.text(j,(XY1[1,1]+XY2[1,1])/2,mean(XY1[2,]),just=c('center'),gp=gpar(cex=cex))
