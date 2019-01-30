@@ -258,7 +258,7 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	sort.by = match.arg(sort.by)
 	Args=list(...)
 	cex=ifelse(is.null(Args$cex),0.8,Args$cex)
-	show.track.id=ifelse(is.null(Args$show.track.id,TRUE),Args$show.track.id)
+	show.track.id=ifelse(is.null(Args$show.track.id),TRUE,Args$show.track.id)
 	intersection.size.rotate=ifelse(is.null(Args$intersection.size.rotate),TRUE,Args$intersection.size.rotate)
 	#set color scheme
 	if(is.null(Args$heatmapColor)){
