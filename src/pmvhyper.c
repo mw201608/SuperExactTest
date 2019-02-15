@@ -21,8 +21,8 @@ logp:  return log probability
 	int minL=min(L,*nL);
 	double *logVal;
 	double *pp;
-	pp = (int *)malloc(sizeof(double)*minL);
-	logVal = (int *)malloc(sizeof(double)*(*n));
+	pp = malloc(sizeof(double)*minL);
+	logVal = malloc(sizeof(double)*(*n));
 	for(i=1; i<= *n ; i++){
 		logVal[i-1]=log((double)i);
 	}

@@ -14,8 +14,8 @@ logp:  return log probability
 	double *f1, *f0;
 	double temp;
 	int minL=min(L,*nL);
-	f1 = (int *)malloc(sizeof(double)*aSize);
-	f0 = (int *)malloc(sizeof(double)*aSize);
+	f1 = malloc(sizeof(double)*aSize);
+	f0 = malloc(sizeof(double)*aSize);
 	if(*nL == 2){
 		*p=C_dhyper(*x,L[0],*n-L[0],L[1],*logp);
 		free(f1);
