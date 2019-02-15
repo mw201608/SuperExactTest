@@ -17,10 +17,12 @@ logp:  return log probability
 	int i,j;
 	int i0=0;
 	double p0=0.0;
-	double logVal[*n];
 	double Xmean;
 	int minL=min(L,*nL);
-	double pp[minL];
+	double *logVal;
+	double *pp;
+	pp = (int *)malloc(sizeof(double)*minL);
+	logVal = (int *)malloc(sizeof(double)*(*n));
 	for(i=1; i<= *n ; i++){
 		logVal[i-1]=log((double)i);
 	}
@@ -30,6 +32,8 @@ logp:  return log probability
 		if (*p > 1) *p = 1.0;
 		if ( *p < 0 ) *p = db_xmin;
 		if(*logp>0) *p=log(*p);
+		free(pp);
+		free(logVal);
 		return;
 	}
 	Xmean=0.0 + *n;
@@ -68,5 +72,7 @@ logp:  return log probability
 	if (*p > 1) *p = 1.0;
 	if ( *p < 0 ) *p = db_xmin;
 	if(*logp > 0) *p = log(*p);
+	free(pp);
+	free(logVal);
 	return;
 }

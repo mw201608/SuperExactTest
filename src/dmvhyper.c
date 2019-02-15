@@ -11,11 +11,15 @@ logp:  return log probability
 	int i, j, k, l;
 	int i0=0;
 	int aSize=max(L,*nL) - *x + 1;
-	double f1[aSize], f0[aSize];
+	double *f1, *f0;
 	double temp;
 	int minL=min(L,*nL);
+	f1 = (int *)malloc(sizeof(double)*aSize);
+	f0 = (int *)malloc(sizeof(double)*aSize);
 	if(*nL == 2){
 		*p=C_dhyper(*x,L[0],*n-L[0],L[1],*logp);
+		free(f1);
+		free(f0);
 		return;
 	}
 	for(i=0; i < aSize; i++) f1[i]=(double) 0;
@@ -56,6 +60,8 @@ logp:  return log probability
 	if (*p > 1) *p = 1.0;
 	if ( *p < 0 ) *p = db_xmin;
 	if(*logp>0) *p = log(*p);
+	free(f1);
+	free(f0);
 	return;
 }
 double C_dhyper(int x, int w, int b, int n, int logp){
