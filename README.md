@@ -1,6 +1,6 @@
 ## SuperExactTest [![CRAN](http://www.r-pkg.org/badges/version/SuperExactTest)](https://cran.r-project.org/package=SuperExactTest) [![Downloads](http://cranlogs.r-pkg.org/badges/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest)
 
-#### Current version 1.0.6
+#### Current version 1.0.7
 
 ### Description
 `SuperExactTest` is an R package for statistical testing and visualization of mult-set intersections.
