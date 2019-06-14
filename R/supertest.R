@@ -19,15 +19,21 @@ supertest.list<-function(x,n=NULL,degree=NULL,...){
 	obj$set.sizes=sapply(x,function(x) length(unique(x)))
 	obj$n=n
 	obj$overlap.sizes=enumerateIntersecSizes(x,degree=degree)
-	obj$P.value=NULL
 	if(!is.null(n)){
 		if(any(obj$set.sizes>n)) stop('Background population size should not be smaller than set size\n')
+		obj$overlap.expected=rep(NA,length(obj$overlap.sizes))
+		for(i in 1:length(obj$overlap.sizes)){
+			s=strsplit(names(obj$overlap.sizes)[i],'')[[1]] == '1'
+			if(sum(s)==1) next
+			obj$overlap.expected[i]=obj$n*do.call('prod',as.list(obj$set.sizes[s]/obj$n))
+		}
 		obj$P.value=sapply(1:length(obj$overlap.sizes),function(i){
 			which.set=which(strsplit(names(obj$overlap.sizes)[i],'')[[1]]=='1')
 			if(length(which.set)==1) return(NA)
 			if(obj$overlap.sizes[i]==0) return(1)
 			cpsets(max(obj$overlap.sizes[i]-1,0),obj$set.sizes[which.set],n,lower.tail=FALSE)
 		})
+		names(obj$overlap.expected)=names(obj$overlap.sizes)
 		names(obj$P.value)=names(obj$overlap.sizes)
 	}
 	class(obj)='msets'
@@ -48,14 +54,10 @@ summary.msets=function(object, degree=NULL, ...){
 	if(length(otab)==0) stop('No data for output\n')
 	Barcode=names(otab)
 	odegree=odegree[Barcode]
-	etab=rep(NA,length(otab))
-	if(!is.null(object$n)){
-		for(i in 1:length(otab)){
-			if(odegree[i] == 1) next
-			s=strsplit(Barcode[i],'')[[1]] == '1'
-			#if(sum(s)==1) next
-			etab[i]=object$n*do.call('prod',as.list(object$set.sizes[s]/object$n))
-		}
+	if(is.null(object$overlap.expected)){
+		etab=rep(NA,length(otab))
+	}else{
+		etab=object$overlap.expected
 	}
 	res=list(Barcode=Barcode,otab=otab,etab=etab,set.names=object$set.names,set.sizes=object$set.sizes,n=object$n,P.value=object$P.value)
 	#find intersections

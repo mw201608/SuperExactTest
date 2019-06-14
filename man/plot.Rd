@@ -27,7 +27,7 @@
  \item{keep.empty.intersections}{logical; if \code{FALSE}, empty intersection(s) will be discarded to save plotting space.}
  \item{min.intersection.size}{Minimum size of an intersection to be plotted.}
  \item{max.intersection.size}{Maximum size of an intersection to be plotted.}
- \item{sort.by}{how to sort intersections. It is one of "\code{set}", "\code{size}", "\code{degree}", and "\code{p-value}".}
+ \item{sort.by}{how to sort intersections. It can be either one of the key words "\code{set}", "\code{size}", "\code{degree}", and "\code{p-value}", or a vector of custom ordered set combination strings.}
  \item{ylim}{the limits c(y1, y2) of plotting overlap size.}
  \item{log.scale}{logical; whether to plot with log transformed intersection sizes.}
  \item{yfrac}{numeric; the fraction (0 to 1) of canvas used for plotting bars. Only used for \code{landscape} Layout.}
@@ -56,6 +56,9 @@
  \itemize{
  \item \code{ylab}, a chracter string of y axis label.
  \item \code{heatmapColor}, a vector of customized heat colors.
+ \item \code{show.expected.overlap}, whether to show expcted overlap in hatched lines. Default 'FALSE'.
+ \item \code{color.expected.overlap}, color for showing expcted overlap in hatched lines. Default 'grey'.
+ \item \code{alpha.expected.overlap}, alpha channel for transparency for showing expcted overlap hatched lines. Default 1 (normalized to  the range 0 to 1).
  \item \code{cex}, scale of text font size.
  \item \code{cex.lab}, scale of axis label text font size.
  \item \code{show.track.id}, logic, whether to show the track id in the \code{circular} layout. Default \code{TRUE}.

@@ -17,7 +17,6 @@ plot.msets=function(x,Layout=c('circular','landscape'),degree=NULL,keep.empty.in
 	}else{
 		stop('Invalid color.scale.pos\n')
 	}
-	sort.by = match.arg(sort.by)
 	if(Layout=='circular'){
 		return(plot.msets.circular(x=x,degree=degree,keep.empty.intersections=keep.empty.intersections,sort.by=sort.by,
 		min.intersection.size=min.intersection.size,max.intersection.size=max.intersection.size,ylim=ylim,log.scale=log.scale,color.scale.pos=color.scale.pos,legend.pos=legend.pos,
@@ -37,7 +36,6 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	log.scale=FALSE,yfrac=0.8,margin=NULL,color.scale.pos=c(0.85, 0.9),color.scale.cex=1,color.scale.title=expression(paste(-Log[10],'(',italic(P),')')),
 	color.on='#2EFE64',color.off='#EEEEEE',show.overlap.size=FALSE,show.set.size=TRUE,overlap.size.cex=0.9,new.gridPage=TRUE,minMinusLog10PValue=0,maxMinusLog10PValue=NULL,show.elements=FALSE,...){
 	#
-	sort.by = match.arg(sort.by)
 	Args=list(...)
 	enable.debug=ifelse(is.null(Args$enable.debug),FALSE,Args$enable.debug)
 	cex=ifelse(is.null(Args$cex),par('cex'),Args$cex)
@@ -49,6 +47,12 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	}else{
 		heatmapColor = Args$heatmapColor
 	}
+	color.expected.overlap=Args$color.expected.overlap
+	alpha.expected.overlap=Args$alpha.expected.overlap
+	if(is.null(color.expected.overlap)) color.expected.overlap='grey'
+	if(is.null(alpha.expected.overlap)) alpha.expected.overlap=1
+	show.expected.overlap=Args$show.expected.overlap
+	if(is.null(show.expected.overlap)) show.expected.overlap=FALSE
 	bar.split=Args$bar.split
 	if(!is.null(bar.split)){
 		if(any(bar.split <= ylim[1])) stop('bar.split values are invalid\n')
@@ -57,6 +61,8 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	nColors=length(heatmapColor)-1
 	params=getPlotParams(x,nColors,degree=degree,keep.empty.intersections=keep.empty.intersections,sort.by=sort.by,min.intersection.size=min.intersection.size,max.intersection.size=max.intersection.size,ylim=ylim,log.scale=log.scale,Layout='landscape',minMinusLog10PValue=minMinusLog10PValue,maxMinusLog10PValue=maxMinusLog10PValue)
 	if((!is.null(bar.split)) && log.scale==TRUE) bar.split=log(bar.split)
+	etab=x$overlap.expected
+	if(is.null(etab)) show.expected.overlap=FALSE
 	ylabel=params$ylabel
 	ylabel0=params$ylabel0
 	ylim=params$ylim
@@ -115,7 +121,10 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	yLen=1 #height of y axis
 	w=1/nO
 	h=yLen/(ylim[2]-ylim[1])
-	if((!is.null(bar.split)) && ylim[2] > bar.split[1]) h=yLen/(ylim[2]-ylim[1]-bar.split[2]+bar.split[1])
+	if((!is.null(bar.split)) && ylim[2] > bar.split[1]){
+		bar.split[2]=min(bar.split[2],ylim[2])
+		h=yLen/(ylim[2]-ylim[1]-bar.split[2]+bar.split[1])
+	}
 	#
 	if(show.elements){
 		elements.rot=45
@@ -128,6 +137,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		if(!is.null(Args$elements.maximum)) elements.maximum=Args$elements.maximum
 		ele.text.posy=ifelse(show.overlap.size,char.size.h/3,0)+ifelse(elements.rot!=0,char.size.h,0)
 	}
+	#Plot bars
 	for(i in 1:nO){
 		posx=w*(i-1)+w/2
 		if((!is.null(bar.split)) && otab[i] > bar.split[1]){
@@ -140,6 +150,15 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		}else{
 			grid.rect(x=posx,y=0.0,width=w*0.8,height=h*otab[i],just=c('center','bottom'),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
 			ytop=h*otab[i]
+			if(show.expected.overlap && !is.na(etab[names(otab[i])])){
+				hexp1=etab[names(otab[i])]
+				#plot expected overlap in hatched lines
+				pushViewport(viewport(x=posx,y=0.0+h*hexp1/2,width=w*0.8,height = h*hexp1))
+				for(ihatch in seq(1,ceiling(hexp1),2)) grid.abline(intercept=(ihatch-1)/ceiling(hexp1), slope=1/ceiling(hexp1),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap))
+				grid.lines(x=c(0,1),y=c(1,1),gp=gpar(col=color.expected.overlap))
+				popViewport(1)
+			}
+			grid.rect(x=posx,y=0.0,width=w*0.8,height=h*otab[i],just=c('center','bottom')) #re-plot the box
 		}
 		if(show.overlap.size) grid.text(otab0[i],posx,ytop+char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
 		if(show.elements){
@@ -255,7 +274,6 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 		stop('Invalid legend.pos\n')
 	}
 	if(is.null(margin)) margin=c(1,1,1,2)+0.1
-	sort.by = match.arg(sort.by)
 	Args=list(...)
 	cex=ifelse(is.null(Args$cex),0.8,Args$cex)
 	show.track.id=ifelse(is.null(Args$show.track.id),TRUE,Args$show.track.id)
@@ -430,23 +448,25 @@ getXY=function(origin,radius,degree){
 }
 getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,ylim=NULL,log.scale=FALSE,Layout=c('circular','landscape'),minMinusLog10PValue=0,maxMinusLog10PValue=NULL){
 	Layout=match.arg(Layout)
-	sort.by = match.arg(sort.by)
 	otab=x$overlap.sizes
-	if(sort.by=='set'){
-		otab.order=order(names(otab))
-		otab=otab[otab.order]
-	}else if(sort.by=='size'){
-		otab.order=order(otab,decreasing=TRUE)
-		otab=otab[otab.order]
-	}else if(sort.by=='degree'){
-		otab.order=order(sapply(names(otab),function(d) countCharOccurrences('1',d))) #order(sapply(strsplit(names(otab),''),function(d) sum(d=='1')))
-		otab=otab[otab.order]
-	}else if(sort.by=='p-value'){
-		otab.order=order(x$P.value)
-		otab=otab[otab.order]
+	if(length(sort.by)==1){
+		sort.by = match.arg(sort.by)
+		if(sort.by=='set'){
+			otab.order=order(names(otab))
+		}else if(sort.by=='size'){
+			otab.order=order(otab,decreasing=TRUE)
+		}else if(sort.by=='degree'){
+			otab.order=order(sapply(names(otab),function(d) countCharOccurrences('1',d))) #order(sapply(strsplit(names(otab),''),function(d) sum(d=='1')))
+		}else if(sort.by=='p-value'){
+			otab.order=order(x$P.value)
+		}else{
+			stop('Invalid sort.by argument\n')
+		}
 	}else{
-		stop('Invalid sort.by argument\n')
+		otab.order=match(sort.by,names(otab))
+		if(any(is.na(otab.order))) stop(paste0('Unrecognized values found in sort.by: ',paste(sort.by[is.na(otab.order)],collapse=', '),'\n'))
 	}
+	otab=otab[otab.order]
 	if(keep.empty.intersections==FALSE){
 		otab.kept=otab>0
 		otab=otab[otab.kept]
@@ -463,8 +483,8 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 	}
 	otab0=otab
 	if(is.null(ylim)){
-		ylabel=axisTicks(c(0,max(otab0,na.rm=T)),log=FALSE) #for landscape layout
-		ylim=c(0,max(otab,na.rm=T))
+		ylabel=axisTicks(c(0,max(otab0,na.rm=TRUE)),log=FALSE) #for landscape layout
+		ylim=c(0,max(otab,na.rm=TRUE))
 		if(Layout=='landscape' && (ylim[2]-max(ylabel))/(ylabel[2]-ylabel[1])>0.5) {ylabel=c(ylabel,ylabel[length(ylabel)]+ylabel[2]-ylabel[1]);ylim[2]=ylabel[length(ylabel)]}
 	}else{
 		ylabel=axisTicks(ylim[1:2],log=FALSE)
