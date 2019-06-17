@@ -47,22 +47,30 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	}else{
 		heatmapColor = Args$heatmapColor
 	}
+	#
 	color.expected.overlap=Args$color.expected.overlap
 	alpha.expected.overlap=Args$alpha.expected.overlap
+	expected.overlap.style=Args$expected.overlap.style
 	if(is.null(color.expected.overlap)) color.expected.overlap='grey'
 	if(is.null(alpha.expected.overlap)) alpha.expected.overlap=1
 	show.expected.overlap=Args$show.expected.overlap
+	expected.overlap.lwd=Args$expected.overlap.lwd
 	if(is.null(show.expected.overlap)) show.expected.overlap=FALSE
+	if(is.null(expected.overlap.style)) expected.overlap.style="hatchedBox"
+	if(is.null(expected.overlap.lwd)) expected.overlap.lwd=2
+	expected.overlap.style=match.arg(expected.overlap.style,choices=c("hatchedBox","horizBar","box"))
+	#
+	etab=x$overlap.expected
+	if(is.null(etab)) show.expected.overlap=FALSE
 	bar.split=Args$bar.split
 	if(!is.null(bar.split)){
+		bar.split=sort(bar.split)
 		if(any(bar.split <= ylim[1])) stop('bar.split values are invalid\n')
 		if(any(bar.split >= ylim[2])) stop('bar.split values are invalid\n')
 	}
 	nColors=length(heatmapColor)-1
-	params=getPlotParams(x,nColors,degree=degree,keep.empty.intersections=keep.empty.intersections,sort.by=sort.by,min.intersection.size=min.intersection.size,max.intersection.size=max.intersection.size,ylim=ylim,log.scale=log.scale,Layout='landscape',minMinusLog10PValue=minMinusLog10PValue,maxMinusLog10PValue=maxMinusLog10PValue)
+	params=getPlotParams(x,nColors,degree=degree,keep.empty.intersections=keep.empty.intersections,sort.by=sort.by,min.intersection.size=min.intersection.size,max.intersection.size=max.intersection.size,ylim=ylim,log.scale=log.scale,Layout='landscape',minMinusLog10PValue=minMinusLog10PValue,maxMinusLog10PValue=maxMinusLog10PValue,show.expected.overlap=show.expected.overlap)
 	if((!is.null(bar.split)) && log.scale==TRUE) bar.split=log(bar.split)
-	etab=x$overlap.expected
-	if(is.null(etab)) show.expected.overlap=FALSE
 	ylabel=params$ylabel
 	ylabel0=params$ylabel0
 	ylim=params$ylim
@@ -150,15 +158,27 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		}else{
 			grid.rect(x=posx,y=0.0,width=w*0.8,height=h*otab[i],just=c('center','bottom'),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
 			ytop=h*otab[i]
-			if(show.expected.overlap && !is.na(etab[names(otab[i])])){
-				hexp1=etab[names(otab[i])]
-				#plot expected overlap in hatched lines
-				pushViewport(viewport(x=posx,y=0.0+h*hexp1/2,width=w*0.8,height = h*hexp1))
-				for(ihatch in seq(1,ceiling(hexp1),2)) grid.abline(intercept=(ihatch-1)/ceiling(hexp1), slope=1/ceiling(hexp1),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap))
-				grid.lines(x=c(0,1),y=c(1,1),gp=gpar(col=color.expected.overlap))
-				popViewport(1)
+		}
+		if(show.expected.overlap && !is.na(etab[names(otab[i])])){
+			hexp1=etab[names(otab[i])]
+			if((!is.null(bar.split)) && hexp1 > bar.split[1]){
+				if(hexp1 > bar.split[2]){
+					hexp1=hexp1-bar.split[2]+bar.split[1]
+				}else{
+					hexp1=bar.split[1]
+				}
 			}
-			grid.rect(x=posx,y=0.0,width=w*0.8,height=h*otab[i],just=c('center','bottom')) #re-plot the box
+			pushViewport(viewport(x=posx,y=0.0+h*hexp1/2,width=w*0.8,height = h*hexp1))
+			if(expected.overlap.style=="horizBar"){
+				grid.lines(x=c(0,1),y=c(1,1),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap,lwd=expected.overlap.lwd))
+			}else{
+				#plot expected overlap in hatched lines
+				if(expected.overlap.style=="hatchedBox"){
+					for(ihatch in seq(1,ceiling(hexp1),2)) grid.abline(intercept=(ihatch-1)/ceiling(hexp1), slope=1/ceiling(hexp1),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap))
+				}
+				grid.rect(x=0.5,y=0.5,width=1,height=1,just=c('center'),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap,lwd=expected.overlap.lwd))
+			}
+			popViewport(1)
 		}
 		if(show.overlap.size) grid.text(otab0[i],posx,ytop+char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
 		if(show.elements){
@@ -183,10 +203,20 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			atVal[i]=ytop
 		}
 		char.size.w=convertUnit(stringWidth('0'), "npc", "x",valueOnly=TRUE)
+		atVal=atVal[! ylabel0 %in% bar.split]
+		ylabel0=ylabel0[! ylabel0 %in% bar.split]
 		yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
-		grid.lines(x = c(0),y = c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white'))
-		grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
-		grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h+char.size.h/3,gp=gpar(col='grey'))
+		if(ylim[2]>bar.split[2]){
+			yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h-char.size.h/2,label=bar.split[1],gp=gpar(cex=cex),name="ya")
+			yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h+char.size.h,label=bar.split[2],gp=gpar(cex=cex),name="yb")
+			grid.remove(gPath("ya", "ticks"))
+			grid.remove(gPath("ya", "major"))
+			grid.remove(gPath("yb", "ticks"))
+			grid.remove(gPath("yb", "major"))
+			grid.lines(x = c(0),y = c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white')) #make a gap
+			grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
+			grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h+char.size.h/3,gp=gpar(col='grey'))
+		}
 	}else{
 		yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
 	}
@@ -446,8 +476,11 @@ getXY=function(origin,radius,degree){
 	Y=radius*sin(degree)
 	origin+c(X,Y)
 }
-getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,ylim=NULL,log.scale=FALSE,Layout=c('circular','landscape'),minMinusLog10PValue=0,maxMinusLog10PValue=NULL){
+getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,ylim=NULL,log.scale=FALSE,Layout=c('circular','landscape'),minMinusLog10PValue=0,maxMinusLog10PValue=NULL,show.expected.overlap=FALSE){
 	Layout=match.arg(Layout)
+	if(is.null(x$overlap.expected)) show.expected.overlap=FALSE
+	etab=c()
+	if(show.expected.overlap) etab=x$overlap.expected
 	otab=x$overlap.sizes
 	if(length(sort.by)==1){
 		sort.by = match.arg(sort.by)
@@ -473,8 +506,7 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 	}else{
 		otab.kept=rep(TRUE,length(otab))
 	}
-	otab=otab[otab >= min.intersection.size] #this option was originally proposed by Maxime Borry
-	otab=otab[otab <= max.intersection.size]
+	otab=otab[otab >= min.intersection.size & otab <= max.intersection.size]
 	if(!is.null(degree)){
 		kpt=sapply(names(otab),function(d) countCharOccurrences('1',d)) %in% degree #sapply(strsplit(names(otab),''),function(d) sum(d == '1') %in% degree)
 		if(sum(kpt)<2) stop('Too few items left for plotting after applying degree filter\n')
@@ -483,7 +515,7 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 	}
 	otab0=otab
 	if(is.null(ylim)){
-		ylabel=axisTicks(c(0,max(otab0,na.rm=TRUE)),log=FALSE) #for landscape layout
+		ylabel=axisTicks(c(0,max(c(etab,otab0),na.rm=TRUE)),log=FALSE) #for landscape layout
 		ylim=c(0,max(otab,na.rm=TRUE))
 		if(Layout=='landscape' && (ylim[2]-max(ylabel))/(ylabel[2]-ylabel[1])>0.5) {ylabel=c(ylabel,ylabel[length(ylabel)]+ylabel[2]-ylabel[1]);ylim[2]=ylabel[length(ylabel)]}
 	}else{

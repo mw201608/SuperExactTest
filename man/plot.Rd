@@ -56,7 +56,9 @@
  \itemize{
  \item \code{ylab}, a chracter string of y axis label.
  \item \code{heatmapColor}, a vector of customized heat colors.
- \item \code{show.expected.overlap}, whether to show expcted overlap in hatched lines. Default 'FALSE'.
+ \item \code{show.expected.overlap}, whether to show expcted overlap in \code{landscape} Layout. Default 'FALSE'.
+ \item \code{expected.overlap.style}, one of c("hatchedBox","horizBar","box"). Default 'hatchedBox'.
+ \item \code{expected.overlap.lwd}, line width for expected.overlap "horizBar" and "box". Default 2.
  \item \code{color.expected.overlap}, color for showing expcted overlap in hatched lines. Default 'grey'.
  \item \code{alpha.expected.overlap}, alpha channel for transparency for showing expcted overlap hatched lines. Default 1 (normalized to  the range 0 to 1).
  \item \code{cex}, scale of text font size.
