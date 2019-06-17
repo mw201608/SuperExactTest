@@ -30,7 +30,9 @@ Result=supertest(input,n=n)
 #png('examples/ex1.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
-	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20))
+	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
+	show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
+	color.expected.overlap='red')
 #dev.off()
 ```
 <img src="examples/ex1.png" width="600" alt="sample output" />

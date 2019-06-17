@@ -176,7 +176,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 				if(expected.overlap.style=="hatchedBox"){
 					for(ihatch in seq(1,ceiling(hexp1),2)) grid.abline(intercept=(ihatch-1)/ceiling(hexp1), slope=1/ceiling(hexp1),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap))
 				}
-				grid.rect(x=0.5,y=0.5,width=1,height=1,just=c('center'),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap,lwd=expected.overlap.lwd))
+				grid.rect(x=0.5,y=0.5,width=1,height=1,just=c('center'),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap,lwd=expected.overlap.lwd,fill=NA))
 			}
 			popViewport(1)
 		}
