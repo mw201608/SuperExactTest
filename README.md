@@ -37,7 +37,7 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 ```
 <img src="examples/ex1.png" width="600" alt="sample output" />
 
-As of version 1.0.7, we can change the order of the intersection bars in a customized way.
+As of version 1.0.7, we can change the order of the intersection bars in a customized way through option `sort.by`.
 For example, let us switch the orders of the fourth and fifth bars in the above figure.
 ```
 #First extract the intersection barcodes ordered by size
