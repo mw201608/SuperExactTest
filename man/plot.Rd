@@ -74,6 +74,7 @@
  \item \code{elements.col}, colour for intersection element text. Default black.
  \item \code{elements.maximum}, maximum number of elements to show.
  \item \code{intersection.size.rotate}, logic, whether to rotate the text of intersection size.
+ \item \code{flip.vertical}, logic, whether to flip the bars to downwards in \code{landscape} Layout. Default 'FALSE'.
  }
 }
 \value{

@@ -48,6 +48,9 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		heatmapColor = Args$heatmapColor
 	}
 	#
+	flip.vertical=Args$flip.vertical
+	if(is.null(flip.vertical)) flip.vertical=FALSE
+	#
 	color.expected.overlap=Args$color.expected.overlap
 	alpha.expected.overlap=Args$alpha.expected.overlap
 	expected.overlap.style=Args$expected.overlap.style
@@ -96,13 +99,23 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	if(new.gridPage) grid.newpage()
 	#arrange layout
 	if(is.null(margin)) margin=c(0.5,5,1.5,2)+0.1
-	top.vp <- viewport(layout=grid.layout(4, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[3], ceiling(yfrac*100),100-ceiling(yfrac*100), margin[1]), c("lines", "null", "null", "lines"))))
+	if(flip.vertical){
+		top.vp <- viewport(layout=grid.layout(4, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[1], 100-ceiling(yfrac*100),ceiling(yfrac*100), margin[3]), c("lines", "null", "null", "lines"))))
+	}else{
+		top.vp <- viewport(layout=grid.layout(4, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[3], ceiling(yfrac*100),100-ceiling(yfrac*100), margin[1]), c("lines", "null", "null", "lines"))))
+	}
 	marginb <- viewport(layout.pos.col = 2, layout.pos.row = 4, name = "marginb")
-	marginl <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginl")
 	margint <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "margint")
 	marginr <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = "marginr")
-	plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot1")
-	plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "plot2")
+	if(flip.vertical){
+		marginl <- viewport(layout.pos.col = 1, layout.pos.row = 3, name = "marginl")
+		plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "plot1")
+		plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot2")
+	}else{
+		marginl <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginl")
+		plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot1")
+		plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "plot2")
+	}
 	splot <- vpTree(top.vp, vpList(marginb, marginl, margint, marginr, plot1, plot2))
 	pushViewport(splot)
 	#
@@ -149,16 +162,19 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	for(i in 1:nO){
 		posx=w*(i-1)+w/2
 		if((!is.null(bar.split)) && otab[i] > bar.split[1]){
-			grid.rect(x=posx,y=0.0,width=w*0.8,height=h*bar.split[1],just=c('center','bottom'),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
+			grid.rect(x=posx,y=ifelse(flip.vertical,1.0,0.0),width=w*0.8,height=h*bar.split[1],just=c('center',ifelse(flip.vertical,'top','bottom')),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
 			ytop=h*bar.split[1]
 			if(otab[i] > bar.split[2]){
-				grid.rect(x=posx,y=h*bar.split[1]+char.size.h/3,width=w*0.8,height=h*(otab[i]-bar.split[2]),just=c('center','bottom'),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
+				y1=h*bar.split[1]+char.size.h/3
+				if(flip.vertical) y1 <- 1-y1
+				grid.rect(x=posx,y=y1,width=w*0.8,height=h*(otab[i]-bar.split[2]),just=c('center',ifelse(flip.vertical,'top','bottom')),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
 				ytop=ytop+char.size.h/3+h*(otab[i]-bar.split[2])
 			}
 		}else{
-			grid.rect(x=posx,y=0.0,width=w*0.8,height=h*otab[i],just=c('center','bottom'),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
+			grid.rect(x=posx,y=ifelse(flip.vertical,1.0,0.0),width=w*0.8,height=h*otab[i],just=c('center',ifelse(flip.vertical,'top','bottom')),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
 			ytop=h*otab[i]
 		}
+		if(flip.vertical) ytop <- 1-ytop
 		if(show.expected.overlap && !is.na(etab[names(otab[i])])){
 			hexp1=etab[names(otab[i])]
 			if((!is.null(bar.split)) && hexp1 > bar.split[1]){
@@ -168,9 +184,9 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 					hexp1=bar.split[1]
 				}
 			}
-			pushViewport(viewport(x=posx,y=0.0+h*hexp1/2,width=w*0.8,height = h*hexp1))
+			pushViewport(viewport(x=posx,y=ifelse(flip.vertical,1-h*hexp1/2,h*hexp1/2),width=w*0.8,height = h*hexp1,just = "centre"))
 			if(expected.overlap.style=="horizBar"){
-				grid.lines(x=c(0,1),y=c(1,1),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap,lwd=expected.overlap.lwd))
+				grid.lines(x=c(0,1),y=c(1,1)-ifelse(flip.vertical,1,0),gp=gpar(col=color.expected.overlap,alpha=alpha.expected.overlap,lwd=expected.overlap.lwd))
 			}else{
 				#plot expected overlap in hatched lines
 				if(expected.overlap.style=="hatchedBox"){
@@ -180,13 +196,13 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			}
 			popViewport(1)
 		}
-		if(show.overlap.size) grid.text(otab0[i],posx,ytop+char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
+		if(show.overlap.size) grid.text(otab0[i],posx,ytop+ifelse(flip.vertical,-3,1) * char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
 		if(show.elements){
 			s00=sumtable[names(otab0)[i],'Elements']
 			if(is.null(s00) || is.na(s00)) next
 			elements=strsplit(s00,', ')[[1]]
 			if(length(elements) > elements.maximum) elements=c(elements[1:elements.maximum],'...')
-			for(j1 in 1:length(elements)) grid.text(elements[j1],posx,ytop+(char.size.h+ifelse(elements.rot!=0,char.size.h/3,0))*j1+ele.text.posy,gp=gpar(cex=elements.cex,col=elements.col),rot=elements.rot,vjust=0.5)
+			for(j1 in 1:length(elements)) grid.text(elements[j1],posx,ytop+ifelse(flip.vertical,-1,1)*((char.size.h+ifelse(elements.rot!=0,char.size.h/3,0))*j1+ele.text.posy),gp=gpar(cex=elements.cex,col=elements.col),rot=elements.rot,vjust=0.5)
 		}
 	}
 	#plot y axis
@@ -205,20 +221,39 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		char.size.w=convertUnit(stringWidth('0'), "npc", "x",valueOnly=TRUE)
 		atVal=atVal[! ylabel0 %in% bar.split]
 		ylabel0=ylabel0[! ylabel0 %in% bar.split]
-		yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
+		if(flip.vertical){
+			yaxis1=grid.yaxis(at=1-atVal,label=ylabel0,gp=gpar(cex=cex))
+		}else{
+			yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
+		}
 		if(ylim[2]>bar.split[2]){
-			yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h-char.size.h/2,label=bar.split[1],gp=gpar(cex=cex),name="ya")
-			yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h+char.size.h,label=bar.split[2],gp=gpar(cex=cex),name="yb")
+			if(flip.vertical){
+				yaxis1=grid.yaxis(at=1-((bar.split[1]-ylim[1])*h-char.size.h/2),label=bar.split[1],gp=gpar(cex=cex),name="ya")
+				yaxis1=grid.yaxis(at=1-((bar.split[1]-ylim[1])*h+char.size.h),label=bar.split[2],gp=gpar(cex=cex),name="yb")
+			}else{
+				yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h-char.size.h/2,label=bar.split[1],gp=gpar(cex=cex),name="ya")
+				yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h+char.size.h,label=bar.split[2],gp=gpar(cex=cex),name="yb")				
+			}
 			grid.remove(gPath("ya", "ticks"))
 			grid.remove(gPath("ya", "major"))
 			grid.remove(gPath("yb", "ticks"))
 			grid.remove(gPath("yb", "major"))
-			grid.lines(x = c(0),y = c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white')) #make a gap
-			grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
-			grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h+char.size.h/3,gp=gpar(col='grey'))
+			if(flip.vertical){
+				grid.lines(x = c(0),y = 1-c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white')) #make a gap
+				grid.lines(x = c(-char.size.w,0),y = 1-(bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
+				grid.lines(x = c(-char.size.w,0),y = 1-((bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='grey'))
+			}else{
+				grid.lines(x = c(0),y = c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white')) #make a gap
+				grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
+				grid.lines(x = c(-char.size.w,0),y = (bar.split[1]-ylim[1])*h+char.size.h/3,gp=gpar(col='grey'))
+			}
 		}
 	}else{
-		yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
+		if(flip.vertical){
+			yaxis1=grid.yaxis(at=1-atVal,label=rev(ylabel0),gp=gpar(cex=cex))
+		}else{
+			yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
+		}
 	}
 	#plot y axis label
 	seekViewport("marginl")
@@ -245,7 +280,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		}else{
 			stop('Invalid color.scale.pos\n')
 		}
-		vp11 <- viewport(x=x.vp, y=y.vp, width=0.2, height=0.1)
+		vp11 <- viewport(x=x.vp, y=ifelse(flip.vertical,1-y.vp,y.vp), width=0.2, height=0.1)
 		pushViewport(vp11)
 		grid.text(color.scale.title,0.5,0.75,just=c('center','bottom'),gp=gpar(cex=color.scale.cex))
 		wc=1/length(heatmapColor)
@@ -482,8 +517,8 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 	etab=c()
 	if(show.expected.overlap) etab=x$overlap.expected
 	otab=x$overlap.sizes
-	if(length(sort.by)==1){
-		sort.by = match.arg(sort.by)
+	if(sort.by[1] %in% c('set','size','degree','p-value')){
+		sort.by = sort.by[1]
 		if(sort.by=='set'){
 			otab.order=order(names(otab))
 		}else if(sort.by=='size'){
