@@ -52,6 +52,7 @@ logp:  return log probability
 			if(p0 <= tiny) break;
 			if(i > (*x + 1) && (p0/pp[i-1]) <= 0.01) break;  //No improve in precision
 		}
+		if(i>minL) i=minL;
 		for(j = i; j >= *x + 1; j--){ //iteration from smallest to largest; more accurate
 			*p += pp[j];
 		}
@@ -64,6 +65,7 @@ logp:  return log probability
 			if(p0 <= tiny) break;
 			if(i < *x && (p0/pp[i+1]) <= 0.01) break;  //No improve in precision
 		}
+		if(i<0) i=0;
 		for(j = i; j <= *x; j++){ //iteration from smallest to largest; more accurate
 			*p += pp[j];
 		}
