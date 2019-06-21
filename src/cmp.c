@@ -1,7 +1,4 @@
-#include <R.h>
-#include <Rmath.h>
-#include <stdio.h>
-#include <math.h>
+#include "mvhyper.h"
 int max2(int a, int b)
 {
    if(a>b) return(a);
