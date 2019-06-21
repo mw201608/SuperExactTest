@@ -1,5 +1,5 @@
 #include "mvhyper.h"
-void C_pmvhyper(int *x, int *nL, int *L, int *n, double *p, int *lower, int *logp){
+void C_pmvhyper(int *x, int *nL, int *L, int *n, double *p, int *lower, int *logp, int *err){
 /*
 x:     number of elements overlap between all subsets
 nL:    number of subsets
@@ -8,6 +8,7 @@ n:     background size
 p:     output probability
 lower: 1, lower tail probability Pr(overlap <= x); 0, upper tail probability Pr(overlap > x)
 logp:  return log probability
+err:   error code
 */
 	const double tiny = 1.0E-320;
 	int i,j;
@@ -20,12 +21,16 @@ logp:  return log probability
 	pp = malloc(sizeof(double)*(minL+1)); //+1 because overlap size range from 0 ~ minL
 	logVal = malloc(sizeof(double)*(*n));
 	if(pp == NULL) {
-		printf("malloc of array size %d failed!\n", minL+1);
-		exit(1);
+		*err=1;
+		free(pp);
+		free(logVal);
+		return;
 	}
 	if(logVal == NULL) {
-		printf("malloc of array size %d failed!\n", *n);
-		exit(1);
+		*err=1;
+		free(pp);
+		free(logVal);
+		return;
 	}
 	for(i=1; i<= *n ; i++){
 		logVal[i-1]=log((double)i);

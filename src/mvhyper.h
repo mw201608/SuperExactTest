@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-void C_pmvhyper(int *x, int *nL, int *L, int *n, double *p, int *lower, int *logp);
+void C_pmvhyper(int *x, int *nL, int *L, int *n, double *p, int *lower, int *logp, int *err);
 void C_dmvhyper_logVal(int *x, int *nL, int *L, int *n, double *p, int *logp, double *logVal); //used in C_pmvhyper
 void C_dmvhyper(int *x, int *nL, int *L, int *n, double *p, int *logp); //used in R function dpsets
 int max2(int a, int b);
