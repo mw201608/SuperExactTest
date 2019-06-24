@@ -79,7 +79,8 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 
 Show fold enrichment on top of the bars by tricking `show.elements` and `elements.list` options.
 ```
-t1=data.frame(Elements=Result$overlap.sizes/Result$overlap.expected,row.names=names(Result$overlap.sizes),stringsAsFactors=FALSE)
+t1=data.frame(Elements=Result$overlap.sizes/Result$overlap.expected,
+	row.names=names(Result$overlap.sizes), stringsAsFactors=FALSE)
 t1=t1[!is.na(t1$Elements),,drop=FALSE]
 t1$Elements=sprintf("%.1f",t1$Elements)
 #png('examples/ex4.png',width=2000,height=2000,res=300)
