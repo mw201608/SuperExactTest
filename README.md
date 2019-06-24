@@ -90,4 +90,5 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
         color.expected.overlap='red')
 #dev.off()
+```
 <img src="examples/ex4.png" width="600" alt="sample output" />
