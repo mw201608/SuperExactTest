@@ -6,7 +6,7 @@ plot.msets=function(x,Layout=c('circular','landscape'),degree=NULL,keep.empty.in
 	sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,ylim=NULL,
 	log.scale=FALSE,yfrac=0.8,margin=NULL,color.scale.pos=c(0.85, 0.9),legend.pos=c(0.85,0.25),legend.col=2,legend.text.cex=1,
 	color.scale.cex=1,color.scale.title=expression(paste(-Log[10],'(',italic(P),')')),color.on='#2EFE64',color.off='#EEEEEE',
-	show.overlap.size=TRUE, show.set.size=TRUE,	overlap.size.cex=0.9, track.area.range=0.3,bar.area.range=0.2,
+	show.overlap.size=TRUE, show.fold.enrichment=FALSE, show.set.size=TRUE,	overlap.size.cex=0.9, track.area.range=0.3,bar.area.range=0.2,
 	new.gridPage=TRUE,minMinusLog10PValue=0,maxMinusLog10PValue=NULL,show.elements=FALSE,...){
 #keep.empty.intersections, whether to retain empty intersections in the plot
 	Layout <- match.arg(Layout)
@@ -17,16 +17,18 @@ plot.msets=function(x,Layout=c('circular','landscape'),degree=NULL,keep.empty.in
 	}else{
 		stop('Invalid color.scale.pos\n')
 	}
+	if(is.null(x$overlap.expected)) show.fold.enrichment=FALSE
+	if(show.fold.enrichment==TRUE) show.overlap.size=FALSE
 	if(Layout=='circular'){
 		return(plot.msets.circular(x=x,degree=degree,keep.empty.intersections=keep.empty.intersections,sort.by=sort.by,
 		min.intersection.size=min.intersection.size,max.intersection.size=max.intersection.size,ylim=ylim,log.scale=log.scale,color.scale.pos=color.scale.pos,legend.pos=legend.pos,
 		legend.col=legend.col,legend.text.cex=legend.text.cex,color.scale.cex=color.scale.cex,
-		color.scale.title=color.scale.title,color.on=color.on,color.off=color.off,show.overlap.size=show.overlap.size,overlap.size.cex=overlap.size.cex,margin=margin,
+		color.scale.title=color.scale.title,color.on=color.on,color.off=color.off,show.overlap.size=show.overlap.size,show.fold.enrichment=show.fold.enrichment,overlap.size.cex=overlap.size.cex,margin=margin,
 		track.area.range=track.area.range,bar.area.range=bar.area.range,new.gridPage=new.gridPage,minMinusLog10PValue=minMinusLog10PValue,maxMinusLog10PValue=maxMinusLog10PValue,...))
 	}else if(Layout=='landscape'){
 		return(plot.msets.landscape(x=x,degree=degree,keep.empty.intersections=keep.empty.intersections,sort.by=sort.by,
 		min.intersection.size=min.intersection.size,max.intersection.size=max.intersection.size,ylim=ylim,log.scale=log.scale,yfrac=yfrac,margin=margin,color.scale.pos=color.scale.pos,color.scale.cex=color.scale.cex,
-		color.scale.title=color.scale.title,color.on=color.on,color.off=color.off,show.overlap.size=show.overlap.size,show.set.size=show.set.size,overlap.size.cex=overlap.size.cex,
+		color.scale.title=color.scale.title,color.on=color.on,color.off=color.off,show.overlap.size=show.overlap.size,show.fold.enrichment=show.fold.enrichment,show.set.size=show.set.size,overlap.size.cex=overlap.size.cex,
 		new.gridPage=new.gridPage,minMinusLog10PValue=minMinusLog10PValue,maxMinusLog10PValue=maxMinusLog10PValue,show.elements=show.elements,...))
 	}else{
 		stop('Invalid Layout\n')
@@ -34,7 +36,7 @@ plot.msets=function(x,Layout=c('circular','landscape'),degree=NULL,keep.empty.in
 }
 plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,ylim=NULL,
 	log.scale=FALSE,yfrac=0.8,margin=NULL,color.scale.pos=c(0.85, 0.9),color.scale.cex=1,color.scale.title=expression(paste(-Log[10],'(',italic(P),')')),
-	color.on='#2EFE64',color.off='#EEEEEE',show.overlap.size=FALSE,show.set.size=TRUE,overlap.size.cex=0.9,new.gridPage=TRUE,minMinusLog10PValue=0,maxMinusLog10PValue=NULL,show.elements=FALSE,...){
+	color.on='#2EFE64',color.off='#EEEEEE',show.overlap.size=FALSE,show.fold.enrichment=FALSE,show.set.size=TRUE,overlap.size.cex=0.9,new.gridPage=TRUE,minMinusLog10PValue=0,maxMinusLog10PValue=NULL,show.elements=FALSE,...){
 	#
 	Args=list(...)
 	enable.debug=ifelse(is.null(Args$enable.debug),FALSE,Args$enable.debug)
@@ -65,6 +67,11 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	#
 	etab=x$overlap.expected
 	if(is.null(etab)) show.expected.overlap=FALSE
+	if(show.fold.enrichment){
+		fetab=sprintf("%.1f",x$overlap.sizes/etab)
+		fetab[fetab=='NA']=NA
+		names(fetab)=names(x$overlap.sizes)
+	}
 	bar.split=Args$bar.split
 	if(!is.null(bar.split)){
 		bar.split=sort(bar.split)
@@ -156,7 +163,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		if(!is.null(Args$elements.cex)) elements.cex=Args$elements.cex
 		if(!is.null(Args$elements.col)) elements.col=Args$elements.col
 		if(!is.null(Args$elements.maximum)) elements.maximum=Args$elements.maximum
-		ele.text.posy=ifelse(show.overlap.size,char.size.h/3,0)+ifelse(elements.rot!=0,char.size.h,0)
+		ele.text.posy=ifelse(show.overlap.size || show.fold.enrichment,char.size.h/3,0)+ifelse(elements.rot!=0,char.size.h,0)
 	}
 	#Plot bars
 	for(i in 1:nO){
@@ -197,6 +204,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			popViewport(1)
 		}
 		if(show.overlap.size) grid.text(otab0[i],posx,ytop+ifelse(flip.vertical,-3,1) * char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
+		if(show.fold.enrichment && !is.na(fetab[names(otab0)[i]])) grid.text(fetab[names(otab0)[i]],posx,ytop+ifelse(flip.vertical,-3,1) * char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
 		if(show.elements){
 			s00=sumtable[names(otab0)[i],'Elements']
 			if(is.null(s00) || is.na(s00)) next
@@ -328,7 +336,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,
 	ylim=NULL,log.scale=FALSE,color.scale.pos=c(0.85, 0.9), legend.pos=c(0.85,0.25),legend.col=2,legend.text.cex=1,
 	color.scale.cex=1,color.scale.title=expression(paste(-Log[10],'(',italic(P),')')),color.on='#2EFE64',color.off='#EEEEEE',
-	show.overlap.size=TRUE,overlap.size.cex=0.9,margin=NULL,track.area.range=0.3,bar.area.range=0.2,
+	show.overlap.size=TRUE,show.fold.enrichment=FALSE,overlap.size.cex=0.9,margin=NULL,track.area.range=0.3,bar.area.range=0.2,
 	new.gridPage=TRUE,minMinusLog10PValue=0,maxMinusLog10PValue=NULL,...){
 	#
 	if(is.character(legend.pos)){
@@ -343,6 +351,11 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	cex=ifelse(is.null(Args$cex),0.8,Args$cex)
 	show.track.id=ifelse(is.null(Args$show.track.id),TRUE,Args$show.track.id)
 	intersection.size.rotate=ifelse(is.null(Args$intersection.size.rotate),TRUE,Args$intersection.size.rotate)
+	if(show.fold.enrichment){
+		fetab=sprintf("%.1f",x$overlap.sizes/x$overlap.expected)
+		fetab[fetab=='NA']=NA
+		names(fetab)=names(x$overlap.sizes)
+	}
 	#set color scheme
 	if(is.null(Args$heatmapColor)){
 		heatmapColor = rev(heat.colors(50)[1:50])
@@ -414,9 +427,10 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 		pos.y=c(XY1[2,],rev(XY2[2,]))
 		grid.polygon(pos.x, pos.y,gp=gpar(fill = heatmapColor[cid[i]],col=1)) #bar height is proportional to the intersection size
 		#text intersection size
-		if(show.overlap.size==TRUE){
+		if(show.overlap.size==TRUE || show.fold.enrichment==TRUE){
 			XY3=sapply(seq(degreeStart[i],degreeEnd[i]-degree.gap,length.out=4), function(deg) getXY(origin,width.sets+bar.width.unit*otab[i]+char.size.h,deg))
-			grid.text(otab0[i],mean(XY3[1,]),mean(XY3[2,]),rot=ifelse(intersection.size.rotate,(degreeStart[i]-pi/2)*radial2deg,0),just='center',gp=gpar(cex=overlap.size.cex))
+			if(show.overlap.size==TRUE) grid.text(otab0[i],mean(XY3[1,]),mean(XY3[2,]),rot=ifelse(intersection.size.rotate,(degreeStart[i]-pi/2)*radial2deg,0),just='center',gp=gpar(cex=overlap.size.cex))
+			if(show.fold.enrichment==TRUE && !is.na(fetab[names(otab0)[i]])) grid.text(fetab[names(otab0)[i]],mean(XY3[1,]),mean(XY3[2,]),rot=ifelse(intersection.size.rotate,(degreeStart[i]-pi/2)*radial2deg,0),just='center',gp=gpar(cex=overlap.size.cex))
 		}
 	}
 	#track number (numbering the legends)

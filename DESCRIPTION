@@ -1,8 +1,8 @@
 Package: SuperExactTest
 Type: Package
 Title: Exact Test and Visualization of Multi-Set Intersections
-Version: 1.0.7
-Date: 2019-06-14
+Version: 1.0.7.1
+Date: 2019-06-24
 Author: Minghui Wang, Yongzhong Zhao and Bin Zhang
 Maintainer: Minghui Wang <minghui.wang@mssm.edu>
 Contact: Minghui Wang <minghui.wang@mssm.edu>, Bin Zhang <bin.zhang@mssm.edu>

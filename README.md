@@ -1,6 +1,6 @@
 ## SuperExactTest [![CRAN](http://www.r-pkg.org/badges/version/SuperExactTest)](https://cran.r-project.org/package=SuperExactTest) [![Downloads](http://cranlogs.r-pkg.org/badges/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest) [![Total downloads]( https://cranlogs.r-pkg.org/badges/grand-total/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest)
 
-#### Current version 1.0.7
+#### Current version 1.0.7.1
 
 ### Description
 `SuperExactTest` is an R package for statistical testing and visualization of mult-set intersections.
@@ -59,13 +59,6 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 
 We can also flip the bars upside down using option flip.vertical=TRUE.
 ```
-#First extract the intersection barcodes ordered by size
-order1=names(sort(Result$overlap.sizes,decreasing=TRUE))
-#Then switch the orders of the fourth and fifth element
-order2=order1[c(1:3,5,4,6:length(order1))]
-print(order1)
-print(order2)
-#Now plot with the new order
 #png('examples/ex3.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
@@ -77,17 +70,13 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 <img src="examples/ex3.png" width="600" alt="sample output" />
 
 
-Show fold enrichment on top of the bars by tricking `show.elements` and `elements.list` options.
+Show fold enrichment rather than overlp size on top of the bars (since v1.0.7.1).
 ```
-t1=data.frame(Elements=Result$overlap.sizes/Result$overlap.expected,
-	row.names=names(Result$overlap.sizes), stringsAsFactors=FALSE)
-t1=t1[!is.na(t1$Elements),,drop=FALSE]
-t1$Elements=sprintf("%.1f",t1$Elements)
 #png('examples/ex4.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
-        bar.split=c(70,180), show.elements=TRUE, elements.cex=1,
-		show.overlap.size=FALSE,
-		elements.list=t1,elements.rot=0,
+        bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
+		show.fold.enrichment=TRUE,
+		elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),elements.rot=45,
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
         color.expected.overlap='red')
 #dev.off()
