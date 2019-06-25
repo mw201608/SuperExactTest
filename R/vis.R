@@ -52,6 +52,8 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	#
 	flip.vertical=Args$flip.vertical
 	if(is.null(flip.vertical)) flip.vertical=FALSE
+	circle.radii=Args$circle.radii
+	if(is.null(circle.radii)) circle.radii=0.5
 	#
 	color.expected.overlap=Args$color.expected.overlap
 	alpha.expected.overlap=Args$alpha.expected.overlap
@@ -181,7 +183,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			grid.rect(x=posx,y=ifelse(flip.vertical,1.0,0.0),width=w*0.8,height=h*otab[i],just=c('center',ifelse(flip.vertical,'top','bottom')),gp=gpar(fill=heatmapColor[cid[i]])) #plot bar
 			ytop=h*otab[i]
 		}
-		if(flip.vertical) ytop <- 1-ytop
+		hexp1=0
 		if(show.expected.overlap && !is.na(etab[names(otab[i])])){
 			hexp1=etab[names(otab[i])]
 			if((!is.null(bar.split)) && hexp1 > bar.split[1]){
@@ -203,6 +205,8 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			}
 			popViewport(1)
 		}
+		ytop=max(ytop,hexp1*h)
+		if(flip.vertical) ytop <- 1-ytop
 		if(show.overlap.size) grid.text(otab0[i],posx,ytop+ifelse(flip.vertical,-3,1) * char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
 		if(show.fold.enrichment && !is.na(fetab[names(otab0)[i]])) grid.text(fetab[names(otab0)[i]],posx,ytop+ifelse(flip.vertical,-3,1) * char.size.h/3,gp=gpar(cex=overlap.size.cex),vjust=0)
 		if(show.elements){
@@ -258,7 +262,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		}
 	}else{
 		if(flip.vertical){
-			yaxis1=grid.yaxis(at=1-atVal,label=rev(ylabel0),gp=gpar(cex=cex))
+			yaxis1=grid.yaxis(at=1-atVal,label=ylabel0,gp=gpar(cex=cex))
 		}else{
 			yaxis1=grid.yaxis(at=atVal,label=ylabel0,gp=gpar(cex=cex))
 		}
@@ -319,9 +323,9 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			vpJ <- viewport(x=posx, y=0.01+(j-0.5)*h, width=w*0.8, height=h*0.75)
 			pushViewport(vpJ)
 			if(substr(names(otab[i]),j,j)=='1'){
-				grid.circle(0.5,0.5,0.5,gp=gpar(fill=color.on))
+				grid.circle(x=0.5,y=0.5,r=circle.radii,gp=gpar(fill=color.on))
 			}else{
-				grid.circle(0.5,0.5,0.5,gp=gpar(fill=color.off))
+				grid.circle(x=0.5,y=0.5,r=circle.radii,gp=gpar(fill=color.off))
 			}
 			upViewport()
 		}

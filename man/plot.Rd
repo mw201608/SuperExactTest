@@ -56,6 +56,7 @@
  The plot canvas has coordinates 0~1 for both x and y axes. Additional optional plot parameters include:
  \itemize{
  \item \code{ylab}, a chracter string of y axis label.
+ \item \code{circle.radii}, radii size of the circles in \code{landscape} Layout. Default 0.5.
  \item \code{heatmapColor}, a vector of customized heat colors.
  \item \code{show.expected.overlap}, whether to show expcted overlap in \code{landscape} Layout. Default 'FALSE'.
  \item \code{expected.overlap.style}, one of c("hatchedBox","horizBar","box"). Default 'hatchedBox'.
