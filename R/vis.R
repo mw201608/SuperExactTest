@@ -186,6 +186,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		hexp1=0
 		if(show.expected.overlap && !is.na(etab[names(otab[i])])){
 			hexp1=etab[names(otab[i])]
+			if(log.scale) hexp1 = log(hexp1 + 1)
 			if((!is.null(bar.split)) && hexp1 > bar.split[1]){
 				if(hexp1 > bar.split[2]){
 					hexp1=hexp1-bar.split[2]+bar.split[1]
