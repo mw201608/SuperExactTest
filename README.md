@@ -17,7 +17,7 @@ To install the latest update from here in `github`, run `devtools::install_githu
 Detailed description about the package and sample analysis code is available from `vignette("set_html",package="SuperExactTest")` ([link](examples/set_html.Md)) after installation.
 
 ### SuperExactTest shiny
-A shiny application has been deployed at [shinyapps.io](https://network.shinyapps.io/SuperExactTest/) (see also [github](https://github.com/mw201608/SuperExactTest)), allowing users to run and visualize `SuperExactTest` analysis online.
+A shiny application has been deployed at [shinyapps.io](https://network.shinyapps.io/SuperExactTest/) (see also [github](https://github.com/mw201608/SuperExactTest.shiny)), allowing users to run and visualize `SuperExactTest` analysis online.
 
 ### Example
 ```
