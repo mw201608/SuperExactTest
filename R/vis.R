@@ -138,16 +138,6 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		upViewport(0)
 		return(invisible())
 	}
-	if(nSet==2){
-	#to be modified
-		grid.circle(x=0.4, y=0.5, r=0.2)
-		grid.circle(x=0.6, y=0.5, r=0.2)
-		grid.text(otab0['10'],0.3,0.5,gp=gpar(cex=cex*2.5))
-		grid.text(otab0['11'],0.5,0.5,gp=gpar(cex=cex*2.5))
-		grid.text(otab0['01'],0.7,0.5,gp=gpar(cex=cex*2.5))
-		upViewport(0)
-		return(invisible())
-	}	
 	yLen=1 #height of y axis
 	w=1/nO
 	h=yLen/(ylim[2]-ylim[1])
