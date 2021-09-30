@@ -105,7 +105,12 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		}
 	}
 	#start plotting
-	if(new.gridPage) grid.newpage()
+	if(new.gridPage){
+		grid.newpage()
+	}else{
+		vp0 = as.character(current.vpPath())
+		on.exit(seekViewport(vp0))
+	}
 	#arrange layout
 	if(is.null(margin)) margin=c(0.5,5,1.5,2)+0.1
 	if(flip.vertical){
@@ -127,17 +132,27 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	}
 	splot <- vpTree(top.vp, vpList(marginb, marginl, margint, marginr, plot1, plot2))
 	pushViewport(splot)
-	#
-	#plot intersections
-	seekViewport("plot1")
+	upViewport()
+	vp1 <- as.character(current.vpPath())
+	seekViewport(paste0(vp1, '::plot1'))
 	if(enable.debug) grid.rect()
 	char.size.h=convertUnit(stringHeight('o'), "npc", "y",valueOnly=TRUE)
 	if(nSet==1){
 		grid.circle(x=0.5, y=0.5, r=0.3)
 		grid.text(otab0[1],0.5,0.5,gp=gpar(cex=cex*2.5))
-		upViewport(0)
+		upViewport()
 		return(invisible())
 	}
+	# if(nSet==2){
+	# #to be modified
+	# 	grid.circle(x=0.4, y=0.5, r=0.2)
+	# 	grid.circle(x=0.6, y=0.5, r=0.2)
+	# 	grid.text(otab0['10'],0.3,0.5,gp=gpar(cex=cex*2.5))
+	# 	grid.text(otab0['11'],0.5,0.5,gp=gpar(cex=cex*2.5))
+	# 	grid.text(otab0['01'],0.7,0.5,gp=gpar(cex=cex*2.5))
+	# 	upViewport(0)
+	# 	return(invisible())
+	# }	
 	yLen=1 #height of y axis
 	w=1/nO
 	h=yLen/(ylim[2]-ylim[1])
@@ -325,7 +340,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		grid.text(x$set.names[j], 0.1*w, 0.015+(j-0.5)*h,just=c('right','center'),gp=gpar(cex=cex))
 		if(show.set.size==TRUE) grid.text(x$set.sizes[j], 1, 0.015+(j-0.5)*h,just=c('left','center'),gp=gpar(cex=cex))
 	}
-	upViewport(0)
+	upViewport()
 	return(invisible())
 }
 plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by=c('set','size','degree','p-value'),min.intersection.size=0,max.intersection.size=Inf,
@@ -386,7 +401,12 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	gap.between.track=ifelse(is.null(Args$gap.between.track),0.1,Args$gap.between.track) #ratio of gap width over track width
 
 	#start a canvas
-	if(new.gridPage) grid.newpage()
+	if(new.gridPage){
+		grid.newpage()
+	}else{
+		vp0 = as.character(current.vpPath())
+		on.exit(seekViewport(vp0))
+	}
 	top.vp <- viewport(layout=grid.layout(3, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[3], 1, margin[1]), c("lines", "null", "lines"))))
 	margin1 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "marginb")
 	margin2 <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginl")
@@ -395,9 +415,10 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot1")
 	splot <- vpTree(top.vp, vpList(margin1, margin2, margin3, margin4, plot1))
 	pushViewport(splot)
-
+	upViewport()
+	vp1 <- as.character(current.vpPath())
 	#Plot tracks
-	seekViewport("plot1")
+	seekViewport(paste0(vp1, '::plot1'))
 	origin=c(0.5,0.5)
 	degreeUnit=2*pi/nO
 	degreeStart=(c(1:nO)-1)*degreeUnit
@@ -512,7 +533,8 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 		vgap=ifelse(is.null(Args$legend.vgap),0.1*legend.text.cex,Args$legend.vgap),hgap=ifelse(is.null(Args$legend.hgap),0.2*legend.text.cex,Args$legend.hgap),
 		gp=gpar(cex=legend.text.cex), draw = FALSE), height = unit(1, "null"),side = ifelse(x.vp>0.5,"right",'left'))
 	grid.draw(Legend)
-	upViewport(0)
+	upViewport()
+	upViewport()
 	return(invisible())
 }
 getXY=function(origin,radius,degree){

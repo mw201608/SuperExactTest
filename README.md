@@ -85,3 +85,25 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 #dev.off()
 ```
 <img src="examples/ex4.png" width="600" alt="sample output" />
+
+Place multiple SuperExactTest plots on the same page by setting new.gridPage = FALSE
+```
+#png('examples/ex5.png',width=3500,height=2000,res=300)
+grid.newpage()
+vp0 <- viewport(layout = grid.layout(1, 2))
+vp1 <- viewport(layout.pos.col = 1, layout.pos.row = 1, name = "plot_left")
+vp2 <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "plot_right")
+vps <- vpTree(vp0, vpList(vp1, vp2))
+pushViewport(vps)
+seekViewport("plot_left")
+plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
+        bar.split=c(70,180), show.fold.enrichment=TRUE,
+        show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
+        color.expected.overlap='red', new.gridPage = FALSE)
+seekViewport("plot_right")
+plot(Result, Layout="circular", sort.by=order2, keep=FALSE,
+        show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
+        color.expected.overlap='red', new.gridPage = FALSE)
+#dev.off()
+```
+<img src="examples/ex4.png" width="800" alt="sample output" />
