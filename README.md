@@ -106,4 +106,4 @@ plot(Result, Layout="circular", sort.by=order2, keep=FALSE,
         color.expected.overlap='red', new.gridPage = FALSE)
 #dev.off()
 ```
-<img src="examples/ex4.png" width="800" alt="sample output" />
+<img src="examples/ex5.png" width="800" alt="sample output" />
