@@ -19,7 +19,8 @@ Detailed description about the package and sample analysis code is available fro
 ### SuperExactTest shiny
 A shiny application has been deployed at [shinyapps.io](https://network.shinyapps.io/SuperExactTest/) (see also [github](https://github.com/mw201608/SuperExactTest.shiny)), allowing users to run and visualize `SuperExactTest` analysis online.
 
-### Example
+### Examples
+#### 1 Show selected overlapping elements
 ```
 library(SuperExactTest)
 set.seed(1234)
@@ -40,6 +41,7 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 ```
 <img src="examples/ex1.png" width="600" alt="sample output" />
 
+#### 2 Sort intersection bars
 As of version 1.0.7, we can change the order of the intersection bars in a customized way through option `sort.by`.
 For example, let us switch the orders of the fourth and fifth bars in the above figure.
 ```
@@ -60,6 +62,7 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 ```
 <img src="examples/ex2.png" width="600" alt="sample output" />
 
+#### 3 Flip the bards upside down
 We can also flip the bars upside down using option flip.vertical=TRUE.
 ```
 #png('examples/ex3.png',width=2000,height=2000,res=300)
@@ -72,7 +75,7 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 ```
 <img src="examples/ex3.png" width="600" alt="sample output" />
 
-
+#### 4 Show fold enrichment
 Show fold enrichment rather than overlp size on top of the bars (since v1.0.7.1).
 ```
 #png('examples/ex4.png',width=2000,height=2000,res=300)
@@ -86,7 +89,8 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 ```
 <img src="examples/ex4.png" width="600" alt="sample output" />
 
-Place multiple SuperExactTest plots on the same page by setting new.gridPage = FALSE
+#### 5 Place multiple SuperExactTest plots on the same page
+We can combine multiple SuperExactTest plots on the same page by setting new.gridPage = FALSE. For example, to arrange two SuperExactTest figures side by side, we can:
 ```
 #png('examples/ex5.png',width=3500,height=2000,res=300)
 grid.newpage()
