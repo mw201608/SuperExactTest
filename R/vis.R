@@ -66,6 +66,9 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	if(is.null(expected.overlap.style)) expected.overlap.style="hatchedBox"
 	if(is.null(expected.overlap.lwd)) expected.overlap.lwd=2
 	expected.overlap.style=match.arg(expected.overlap.style,choices=c("hatchedBox","horizBar","box"))
+	title = Args$title
+	cex.title = Args$cex.title
+	if(is.null(cex.title)) cex.title = 1
 	#
 	etab=x$overlap.expected
 	if(is.null(etab)) show.expected.overlap=FALSE
@@ -134,6 +137,11 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	pushViewport(splot)
 	upViewport()
 	vp1 <- as.character(current.vpPath())
+	if(!is.null(title)){
+		seekViewport(paste0(vp1, '::.set_internal_margint'))
+		grid.text(title, 0.5, 0.5, gp = gpar(cex = cex.title))
+		upViewport()
+	}
 	seekViewport(paste0(vp1, '::.set_internal_plot1'))
 	if(enable.debug) grid.rect()
 	char.size.h=convertUnit(stringHeight('o'), "npc", "y",valueOnly=TRUE)
@@ -358,6 +366,9 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	}
 	if(is.null(margin)) margin=c(1,1,1,2)+0.1
 	Args=list(...)
+	title = Args$title
+	cex.title = Args$cex.title
+	if(is.null(cex.title)) cex.title = 1
 	cex=ifelse(is.null(Args$cex),0.8,Args$cex)
 	show.track.id=ifelse(is.null(Args$show.track.id),TRUE,Args$show.track.id)
 	intersection.size.rotate=ifelse(is.null(Args$intersection.size.rotate),TRUE,Args$intersection.size.rotate)
@@ -417,6 +428,12 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	pushViewport(splot)
 	upViewport()
 	vp1 <- as.character(current.vpPath())
+	#
+	if(!is.null(title)){
+		seekViewport(paste0(vp1, '::.set_internal2_margint'))
+		grid.text(title, 0.5, 0.5, gp = gpar(cex = cex.title))
+		upViewport()
+	}
 	#Plot tracks
 	seekViewport(paste0(vp1, '::.set_internal2_plot1'))
 	origin=c(0.5,0.5)

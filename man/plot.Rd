@@ -77,6 +77,8 @@
  \item \code{elements.maximum}, maximum number of elements to show.
  \item \code{intersection.size.rotate}, logic, whether to rotate the text of intersection size.
  \item \code{flip.vertical}, logic, whether to flip the bars to downwards in \code{landscape} Layout. Default 'FALSE'.
+ \item \code{title}, figure title. Default NULL.
+ \item \code{cex.title}, scale of title text font size. Default 1.
  }
 }
 \value{
