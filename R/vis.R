@@ -118,23 +118,23 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	}else{
 		top.vp <- viewport(layout=grid.layout(4, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[3], ceiling(yfrac*100),100-ceiling(yfrac*100), margin[1]), c("lines", "null", "null", "lines"))))
 	}
-	marginb <- viewport(layout.pos.col = 2, layout.pos.row = 4, name = "marginb")
-	margint <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "margint")
-	marginr <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = "marginr")
+	set1_marginb <- viewport(layout.pos.col = 2, layout.pos.row = 4, name = ".set_internal_marginb")
+	set1_margint <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = ".set_internal_margint")
+	set1_marginr <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = ".set_internal_marginr")
 	if(flip.vertical){
-		marginl <- viewport(layout.pos.col = 1, layout.pos.row = 3, name = "marginl")
-		plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "plot1")
-		plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot2")
+		set1_marginl <- viewport(layout.pos.col = 1, layout.pos.row = 3, name = ".set_internal_marginl")
+		set1_plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = ".set_internal_plot1")
+		set1_plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = ".set_internal_plot2")
 	}else{
-		marginl <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginl")
-		plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot1")
-		plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "plot2")
+		set1_marginl <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = ".set_internal_marginl")
+		set1_plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = ".set_internal_plot1")
+		set1_plot2 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = ".set_internal_plot2")
 	}
-	splot <- vpTree(top.vp, vpList(marginb, marginl, margint, marginr, plot1, plot2))
+	splot <- vpTree(top.vp, vpList(set1_marginb, set1_marginl, set1_margint, set1_marginr, set1_plot1, set1_plot2))
 	pushViewport(splot)
 	upViewport()
 	vp1 <- as.character(current.vpPath())
-	seekViewport(paste0(vp1, '::plot1'))
+	seekViewport(paste0(vp1, '::.set_internal_plot1'))
 	if(enable.debug) grid.rect()
 	char.size.h=convertUnit(stringHeight('o'), "npc", "y",valueOnly=TRUE)
 	if(nSet==1){
@@ -274,13 +274,13 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 		}
 	}
 	#plot y axis label
-	seekViewport("marginl")
+	seekViewport(paste0(vp1, '::.set_internal_marginl'))
 	if(enable.debug) grid.rect()
 	char.size.w=convertUnit(stringWidth('0'), "npc", "x",valueOnly=TRUE)
 	grid.text(ylab, x = 1-convertX(unit(1,'lines'), 'npc', valueOnly = TRUE)-2*char.size.w * max(nchar(ylabel0)), rot=90, gp=gpar(cex=cex.lab))
 
 	#plot color scale
-	seekViewport("plot1")
+	seekViewport(paste0(vp1, '::.set_internal_plot1'))
 	if((!is.null(x$n)) & (! is.null(mlogp))){
 		if(is.character(color.scale.pos)){
 			if(color.scale.pos == 'topright'){
@@ -320,7 +320,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	}
 
 	#sub canvas 2, plot intersection matrix
-	seekViewport("plot2")
+	seekViewport(paste0(vp1, '::.set_internal_plot2'))
 	if(enable.debug) grid.rect()
 	h=0.9/nSet
 	for(i in 1:nO){
@@ -408,17 +408,17 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 		on.exit(seekViewport(vp0))
 	}
 	top.vp <- viewport(layout=grid.layout(3, 3, widths=unit(c(margin[2], 1, margin[4]), c("lines", "null", "lines")), heights=unit(c(margin[3], 1, margin[1]), c("lines", "null", "lines"))))
-	margin1 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = "marginb")
-	margin2 <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = "marginl")
-	margin3 <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "margint")
-	margin4 <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = "marginr")
-	plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = "plot1")
-	splot <- vpTree(top.vp, vpList(margin1, margin2, margin3, margin4, plot1))
+	set2_margin1 <- viewport(layout.pos.col = 2, layout.pos.row = 3, name = ".set_internal2_marginb")
+	set2_margin2 <- viewport(layout.pos.col = 1, layout.pos.row = 2, name = ".set_internal2_marginl")
+	set2_margin3 <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = ".set_internal2_margint")
+	set2_margin4 <- viewport(layout.pos.col = 3, layout.pos.row = 2, name = ".set_internal2_marginr")
+	set2_plot1 <- viewport(layout.pos.col = 2, layout.pos.row = 2, name = ".set_internal2_plot1")
+	splot <- vpTree(top.vp, vpList(set2_margin1, set2_margin2, set2_margin3, set2_margin4, set2_plot1))
 	pushViewport(splot)
 	upViewport()
 	vp1 <- as.character(current.vpPath())
 	#Plot tracks
-	seekViewport(paste0(vp1, '::plot1'))
+	seekViewport(paste0(vp1, '::.set_internal2_plot1'))
 	origin=c(0.5,0.5)
 	degreeUnit=2*pi/nO
 	degreeStart=(c(1:nO)-1)*degreeUnit
