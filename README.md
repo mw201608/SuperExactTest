@@ -100,14 +100,14 @@ vp2 <- viewport(layout.pos.col = 2, layout.pos.row = 1, name = "plot_right")
 vps <- vpTree(vp0, vpList(vp1, vp2))
 pushViewport(vps)
 seekViewport("plot_left")
-plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
+plot(Result, Layout="landscape", sort.by='size', keep=FALSE,
         bar.split=c(70,180), show.fold.enrichment=TRUE,
-        show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
-        color.expected.overlap='red', new.gridPage = FALSE)
+        show.expected.overlap=TRUE, expected.overlap.style="hatchedBox",
+        color.expected.overlap='red', title = 'Figure A. Landscape layout', new.gridPage = FALSE)
 seekViewport("plot_right")
-plot(Result, Layout="circular", sort.by=order2, keep=FALSE,
+plot(Result, Layout="circular", sort.by='size', keep=FALSE,
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
-        color.expected.overlap='red', new.gridPage = FALSE)
+        color.expected.overlap='red', title = 'Figure B. Circular layout', new.gridPage = FALSE)
 #dev.off()
 ```
 <img src="examples/ex5.png" width="800" alt="sample output" />
