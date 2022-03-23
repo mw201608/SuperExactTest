@@ -29,7 +29,7 @@ n=400
 r_strings <- do.call(paste0, replicate(5, sample(LETTERS, n, TRUE), FALSE))
 input=lapply(c(40,60,80,200),function(x,s) sample(s,x),s=r_strings)
 Result=supertest(input,n=n)
-#plot the intersections with a split y-axis
+#Plot the intersections with a split y-axis and 
 #show elements of the intersections with no more than 20 elements
 #png('examples/ex1.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
@@ -40,6 +40,19 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 #dev.off()
 ```
 <img src="examples/ex1.png" width="600" alt="sample output" />
+
+Assign discrete colors to denote the sets that are involved in each intersection by setting color.on to NULL or a vector of colors.
+```
+#png('examples/ex1color.png',width=2000,height=2000,res=300)
+plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
+	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
+	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
+	show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
+	color.expected.overlap='red', color.on = NULL)
+#dev.off()
+```
+
+<img src="examples/ex1color.png" width="600" alt="sample output" />
 
 #### 2 Sort intersection bars
 As of version 1.0.7, we can change the order of the intersection bars in a customized way through option `sort.by`.
@@ -57,7 +70,7 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
         elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
-        color.expected.overlap='red')
+        color.expected.overlap='red', color.on = NULL)
 #dev.off()
 ```
 <img src="examples/ex2.png" width="600" alt="sample output" />
@@ -70,7 +83,7 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
         elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
-        color.expected.overlap='red',flip.vertical=TRUE)
+        color.expected.overlap='red', color.on = NULL, flip.vertical=TRUE)
 #dev.off()
 ```
 <img src="examples/ex3.png" width="600" alt="sample output" />
@@ -84,7 +97,7 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 		show.fold.enrichment=TRUE,
 		elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),elements.rot=45,
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
-        color.expected.overlap='red')
+        color.expected.overlap='red', color.on = NULL)
 #dev.off()
 ```
 <img src="examples/ex4.png" width="600" alt="sample output" />
@@ -92,7 +105,7 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 #### 5 Place multiple SuperExactTest plots on the same page
 We can combine multiple SuperExactTest plots on the same page by setting new.gridPage = FALSE. For example, to arrange two SuperExactTest figures side by side, we can:
 ```
-#png('examples/ex5.png',width=3500,height=2000,res=300)
+#png('examples/ex5.png',width=4000,height=2000,res=300)
 grid.newpage()
 vp0 <- viewport(layout = grid.layout(1, 2))
 vp1 <- viewport(layout.pos.col = 1, layout.pos.row = 1, name = "plot_left")
@@ -103,11 +116,13 @@ seekViewport("plot_left")
 plot(Result, Layout="landscape", sort.by='size', keep=FALSE,
         bar.split=c(70,180), show.fold.enrichment=TRUE,
         show.expected.overlap=TRUE, expected.overlap.style="hatchedBox",
-        color.expected.overlap='red', title = 'Figure A. Landscape layout', new.gridPage = FALSE)
+        color.expected.overlap='red', color.on = NULL,
+        title = 'Figure A. Landscape layout', new.gridPage = FALSE)
 seekViewport("plot_right")
 plot(Result, Layout="circular", sort.by='size', keep=FALSE,
         show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
-        color.expected.overlap='red', title = 'Figure B. Circular layout', new.gridPage = FALSE)
+        color.expected.overlap='red', color.on = NULL,
+        title = 'Figure B. Circular layout', new.gridPage = FALSE)
 #dev.off()
 ```
-<img src="examples/ex5.png" width="800" alt="sample output" />
+<img src="examples/ex5.png" width="1000" alt="sample output" />

@@ -215,7 +215,7 @@ plot(res, sort.by="size", margin=c(2,2,2,2), color.scale.pos=c(0.85,1), legend.p
 
 ![A circular plot visualizing all possible intersections and the corresponding statistics amongst *cis*-eQTL gene sets.](figure/fig1-1.png)
 
-The four tracks in the middle represent the four gene sets, with individual blocks showing "presence" (green) or "absence" (grey) of the gene sets in each intersection.
+The four tracks in the middle represent the four gene sets, with individual blocks showing "presence" (green) or "absence" (grey) of the gene sets in each intersection. To denote the four gene sets with different colors, set argument `color.on` to NULL or provide it with a vector of user-defined colors.
 The height of the bars in the outer layer is proportional to the intersection sizes, as indicated by the numbers on the top of the bars. The color intensity of the bars represents the P value significance of the intersections.
 
 As the option name suggests, `sort.by="size"` instructs the intersections to be sorted by size. Users are flexible to use different color schemes or sort intersections by P value, set, size or degree.

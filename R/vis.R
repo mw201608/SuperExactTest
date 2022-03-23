@@ -98,6 +98,8 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 	nSet=length(x$set.sizes) #number of sets
 	cid=params$cid
 	mlogp=params$mlogp
+	if(is.null(color.on)) color.on = c("#386cb0", "#fdb462", "#7fc97f", "#ef3b2c", "#662506", "#a6cee3", "#fb9a99", "#984ea3", "#ffff33", "#00798c", "#d1495b", "#66a182", "#2e4057")
+	if(length(color.on) < nSet) color.on = rep(color.on, length.out = nSet)
 	#
 	if(show.elements){
 		sumtable=Args$elements.list
@@ -337,7 +339,7 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 			vpJ <- viewport(x=posx, y=0.01+(j-0.5)*h, width=w*0.8, height=h*0.75)
 			pushViewport(vpJ)
 			if(substr(names(otab[i]),j,j)=='1'){
-				grid.circle(x=0.5,y=0.5,r=circle.radii,gp=gpar(fill=color.on))
+				grid.circle(x=0.5,y=0.5,r=circle.radii,gp=gpar(fill=color.on[j]))
 			}else{
 				grid.circle(x=0.5,y=0.5,r=circle.radii,gp=gpar(fill=color.off))
 			}
@@ -396,7 +398,8 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 	cid=params$cid
 	mlogp=params$mlogp
 	radial2deg=180/pi
-
+	if(is.null(color.on)) color.on = c("#386cb0", "#fdb462", "#7fc97f", "#ef3b2c", "#662506", "#a6cee3", "#fb9a99", "#984ea3", "#ffff33", "#00798c", "#d1495b", "#66a182", "#2e4057")
+	if(length(color.on) < nSet) color.on = rep(color.on, length.out = nSet)
 	# set graph layout parameters
 	track.area.range=as.numeric(track.area.range)
 	bar.area.range=as.numeric(bar.area.range)
@@ -451,7 +454,7 @@ plot.msets.circular=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.by
 			XY2=sapply(seq(degreeStart[i],degreeEnd[i]-degree.gap,length.out=40), function(deg) getXY(origin,(j+track.offset)*track.width-track.width*gap.between.track,deg))
 			pos.x <- c(XY1[1,],rev(XY2[1,]))
 			pos.y <- c(XY1[2,],rev(XY2[2,]))
-			grid.polygon(pos.x, pos.y,gp=gpar(col = 'black',fill=ifelse(which.set[j],color.on,color.off))) #
+			grid.polygon(pos.x, pos.y,gp=gpar(col = 'black',fill=ifelse(which.set[j],color.on[j],color.off))) #
 		}
 		#bar plot intersection size
 		XY1=sapply(seq(degreeStart[i],degreeEnd[i]-degree.gap,length.out=40), function(deg) getXY(origin,width.sets,deg))
