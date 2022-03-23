@@ -41,7 +41,7 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 ```
 <img src="examples/ex1.png" width="600" alt="sample output" />
 
-Assign discrete colors to denote the sets that are involved in each intersection by setting color.on to NULL or a vector of colors.
+Assign discrete colors to denote the sets that are involved in each intersection by setting `color.on` to NULL or a vector of colors.
 ```
 #png('examples/ex1color.png',width=2000,height=2000,res=300)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
