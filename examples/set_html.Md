@@ -32,7 +32,7 @@ Identifying expression regulators is considered a powerful tool in dissecting th
 It is widely believed that the gene expression regulation are both spatially (cell-type and tissue specificity) and temporally (different developmental stages).
 
 As an example, we downloaded four sets of genes with *cis*-eQTLs (i.e. gene expression regulated by local genetic variants) detected in four different brain regions (Gibbs et al 2010)
-which had been deposited in the eQTL Browser database (http://www.ncbi.nlm.nih.gov/projects/gap/eqtl/index.cgi) and performed statistical analyses of the intersections among the gene sets.
+which had been deposited in the eQTL Browser database (www.ncbi.nlm.nih.gov/ projects/gap/eqtl/index.cgi; url no longer accessible) and performed statistical analyses of the intersections among the gene sets.
 For convenience, we pre-compiled the *cis*-eQTL genes into a list which has been included in the present package. After loading the package, the pre-compiled dataset can be imported as follows:
 
 ```r
