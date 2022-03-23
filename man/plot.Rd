@@ -38,7 +38,7 @@
  \item{legend.text.cex}{numeric; specifying the amount by which legend text should be magnified relative to the default.}
  \item{color.scale.cex}{numeric; specifying the amount by which color scale text should be magnified relative to the default.}
  \item{color.scale.title}{character or expression; a title for the color scale guide.}
- \item{color.on}{color code; specifying the color for set(s) which are "\code{present}" for an intersection. Can be a vector of colors. When NULL, a predefined list of colors will be used.}
+ \item{color.on}{color code; specifying the color for set(s) which are "\code{present}" for an intersection. Can be a vector of colors. When \code{NULL}, a predefined list of colors will be used.}
  \item{color.off}{color code; specifying the color for set(s) which are "{absent}" for an intersection.}
  \item{show.overlap.size}{logical; whether to show overlap size on top of the bars. This will be set to \code{FALSE} if \code{show.fold.enrichment = TRUE}.}
  \item{show.fold.enrichment}{logical; whether to show fold enrichment if available rather than overlap size. This will impact \code{show.overlap.size}.}
