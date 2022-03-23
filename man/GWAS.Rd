@@ -5,7 +5,7 @@
 \description{
   This example dataset contains a list of gene sets associated with six types of clinical traits curated in the GWAS Catalog.
 }
-\usage{GWAS}
+\usage{data(GWAS)}
 \details{
 The six clinical traits are:
 \itemize{

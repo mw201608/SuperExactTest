@@ -5,7 +5,7 @@
 \description{
   This example dataset contains a list of seven cancer predisposition gene sets.
 }
-\usage{Cancer}
+\usage{data(Cancer)}
 \details{
 The seven cancer predisposition gene sets are:
 \itemize{
