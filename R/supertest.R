@@ -31,7 +31,7 @@ supertest.list<-function(x,n=NULL,degree=NULL,...){
 			which.set=which(strsplit(names(obj$overlap.sizes)[i],'')[[1]]=='1')
 			if(length(which.set)==1) return(NA)
 			if(obj$overlap.sizes[i]==0) return(1)
-			cpsets(max(obj$overlap.sizes[i]-1,0),obj$set.sizes[which.set],n,lower.tail=FALSE)
+			cpsets(obj$overlap.sizes[i]-1, obj$set.sizes[which.set], n, lower.tail=FALSE)
 		})
 		names(obj$overlap.expected)=names(obj$overlap.sizes)
 		names(obj$P.value)=names(obj$overlap.sizes)

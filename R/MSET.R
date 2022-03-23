@@ -3,7 +3,7 @@
 #Date: 20 July, 2014
 
 #a wrapper to call cpsets
-MSET <- function(x,n,lower.tail=TRUE,log.p=FALSE){
+MSET <- function(x, n, lower.tail=TRUE, log.p=FALSE){
 #Input:
 #x           a list of sets.
 #n           background size.
@@ -11,10 +11,14 @@ MSET <- function(x,n,lower.tail=TRUE,log.p=FALSE){
 #log.p       logical; if TRUE, probabilities p are given as log(p).
 	L=sapply(x,length)
 	if(n<1 | any(L>n) | any(L==0)) stop('Invalid input\n')
-	intersects=intersect.list(x)
-	Obs=length(intersects)
-	Exp=n*do.call(prod,as.list(L/n))
-	p=cpsets(max(Obs-1,0,na.rm=TRUE),L,n,lower.tail,log.p)
+	intersects = intersect.list(x)
+	Obs = length(intersects)
+	Exp = n*do.call(prod, as.list(L/n))
+	if(Obs == 0 ){
+		p = ifelse(lower.tail, 0.0, 1.0)
+	}else{
+		p = cpsets(Obs-1, L, n, lower.tail, log.p)
+	}
 	list(intersects=intersects, FE=Obs/Exp, p.value=p)
 }
 #Sample usage:
