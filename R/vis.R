@@ -262,10 +262,10 @@ plot.msets.landscape=function(x,degree=NULL,keep.empty.intersections=TRUE,sort.b
 				yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h-char.size.h/2,label=bar.split[1],gp=gpar(cex=cex),name="ya")
 				yaxis1=grid.yaxis(at=(bar.split[1]-ylim[1])*h+char.size.h,label=bar.split[2],gp=gpar(cex=cex),name="yb")				
 			}
-			grid.remove(gPath("ya", "ticks"))
-			grid.remove(gPath("ya", "major"))
-			grid.remove(gPath("yb", "ticks"))
-			grid.remove(gPath("yb", "major"))
+			# grid.remove(gPath("ya", "ticks"))
+			# grid.remove(gPath("ya", "major"))
+			# grid.remove(gPath("yb", "ticks"))
+			# grid.remove(gPath("yb", "major"))
 			if(flip.vertical){
 				grid.lines(x = c(0),y = 1-c((bar.split[1]-ylim[1])*h,(bar.split[1]-ylim[1])*h+char.size.h/3),gp=gpar(col='white')) #make a gap
 				grid.lines(x = c(-char.size.w,0),y = 1-(bar.split[1]-ylim[1])*h,gp=gpar(col='grey'))
