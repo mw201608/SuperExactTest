@@ -87,6 +87,7 @@ plot(Result, Layout="landscape", sort.by=order3,
         color.expected.overlap='red', color.on = NULL)
 #dev.off()
 ```
+<img src="examples/ex2b.png" width="600" alt="sample output" />
 
 #### 3 Flip the bards upside down
 We can also flip the bars upside down using option flip.vertical=TRUE.
