@@ -566,7 +566,6 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 	Layout=match.arg(Layout)
 	if(is.null(x$overlap.expected)) show.expected.overlap=FALSE
 	etab=c()
-	if(show.expected.overlap) etab=x$overlap.expected
 	otab=x$overlap.sizes
 	if(sort.by[1] %in% c('set','size','degree','p-value')){
 		sort.by = sort.by[1]
@@ -586,20 +585,15 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 		if(any(is.na(otab.order))) stop(paste0('Unrecognized values found in sort.by: ',paste(sort.by[is.na(otab.order)],collapse=', '),'\n'))
 	}
 	otab=otab[otab.order]
-	if(keep.empty.intersections==FALSE){
-		otab.kept=otab>0
-		otab=otab[otab.kept]
-	}else{
-		otab.kept=rep(TRUE,length(otab))
-	}
+	if(keep.empty.intersections==FALSE) otab=otab[otab>0]
 	otab=otab[otab >= min.intersection.size & otab <= max.intersection.size]
 	if(!is.null(degree)){
 		kpt=sapply(names(otab),function(d) countCharOccurrences('1',d)) %in% degree #sapply(strsplit(names(otab),''),function(d) sum(d == '1') %in% degree)
 		if(sum(kpt)<2) stop('Too few items left for plotting after applying degree filter\n')
-		otab.kept[otab.kept]=kpt
 		otab=otab[kpt]
 	}
 	otab0=otab
+	if(show.expected.overlap) etab=x$overlap.expected[names(otab)]
 	if(is.null(ylim)){
 		ylabel=axisTicks(c(0,max(c(etab,otab0),na.rm=TRUE)),log=FALSE) #for landscape layout
 		ylim=c(0,max(otab,na.rm=TRUE))
@@ -619,10 +613,8 @@ getPlotParams=function(x,nColors=50,degree=NULL,keep.empty.intersections=TRUE,so
 	cid=rep(1,nO) #color gradient id
 	mlogp=NULL
 	if((!is.null(x$n)) && nO>0){
-		mlogp=-log(x$P.value,base=10)
-		mlogp[is.na(mlogp)]=1.0e-10
-		mlogp=mlogp[otab.order]
-		mlogp=mlogp[otab.kept]
+		mlogp=-log(x$P.value[names(otab)], base=10)
+		mlogp[is.na(mlogp)]=1e-10
 		mlogp[mlogp == Inf] = max(320,mlogp[mlogp < Inf],na.rm=TRUE)
 		if(is.null(maxMinusLog10PValue)) maxMinusLog10PValue=ceiling(max(c(mlogp,1e-10),na.rm=TRUE))
 		maxMinusLog10PValue=ceiling(maxMinusLog10PValue)
