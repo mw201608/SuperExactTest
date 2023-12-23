@@ -1,6 +1,6 @@
 ## SuperExactTest [![CRAN](http://www.r-pkg.org/badges/version/SuperExactTest)](https://cran.r-project.org/package=SuperExactTest) [![Downloads](http://cranlogs.r-pkg.org/badges/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest) [![Total downloads]( https://cranlogs.r-pkg.org/badges/grand-total/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest)
 
-#### Current version 1.1.1
+#### Current version 1.1.2
 
 ### Description
 `SuperExactTest` is an R package for statistical testing and visualization of mult-set intersections.
@@ -54,7 +54,7 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 
 <img src="examples/ex1color.png" width="600" alt="sample output" />
 
-#### 2 Sort intersection bars
+#### 2 Sort and/or subset intersection bars for plotting
 As of version 1.0.7, we can change the order of the intersection bars in a customized way through option `sort.by`.
 For example, let us switch the orders of the fourth and fifth bars in the above figure.
 ```
@@ -74,6 +74,19 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
 #dev.off()
 ```
 <img src="examples/ex2.png" width="600" alt="sample output" />
+
+
+With this option `sort.by`, we can also show a subset of the intersection bars easily. Eg, let us plot the 10 largest overlaps.
+```
+order3=order1[1:10]
+#png('examples/ex2b.png',width=2000,height=2000,res=300)
+plot(Result, Layout="landscape", sort.by=order3,
+        bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
+        elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
+        show.expected.overlap=TRUE,expected.overlap.style="hatchedBox",
+        color.expected.overlap='red', color.on = NULL)
+#dev.off()
+```
 
 #### 3 Flip the bards upside down
 We can also flip the bars upside down using option flip.vertical=TRUE.
