@@ -89,7 +89,7 @@ plot(Result, Layout="landscape", sort.by=order3,
 ```
 <img src="examples/ex2b.png" width="600" alt="sample output" />
 
-#### 3 Flip the bards upside down
+#### 3 Flip the bars upside down
 We can also flip the bars upside down using option flip.vertical=TRUE.
 ```
 #png('examples/ex3.png',width=2000,height=2000,res=300)
