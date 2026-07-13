@@ -1,89 +1,111 @@
 #include "mvhyper.h"
-void C_pmvhyper(int *x, int *nL, int *L, int *n, double *p, int *lower, int *logp, int *err){
-/*
-x:     number of elements overlap between all subsets
-nL:    number of subsets
-L:     subset sizes
-n:     background size
-p:     output probability
-lower: 1, lower tail probability Pr(overlap <= x); 0, upper tail probability Pr(overlap > x)
-logp:  return log probability
-err:   error code
-*/
-	const double tiny = 1.0E-320;
-	int i,j;
-	int i0=0;
-	double p0=0.0;
-	double Xmean;
-	int minL=min(L,*nL);
-	double *logVal;
-	double *pp;
-	pp = malloc(sizeof(double)*(minL+1)); //+1 because overlap size range from 0 ~ minL
-	logVal = malloc(sizeof(double)*(*n));
-	if(pp == NULL) {
-		*err=1;
-		free(pp);
-		free(logVal);
-		return;
-	}
-	if(logVal == NULL) {
-		*err=1;
-		free(pp);
-		free(logVal);
-		return;
-	}
-	for(i=1; i<= *n ; i++){
-		logVal[i-1]=log((double)i);
-	}
-	if(*x == 0){
-		C_dmvhyper_logVal(x, nL, L, n, p, &i0, logVal);
-		if (*lower == 0) *p = 1.0 - *p;
-		if (*p > 1) *p = 1.0;
-		if ( *p < 0 ) *p = db_xmin;
-		if(*logp>0) *p=log(*p);
-		free(pp);
-		free(logVal);
-		return;
-	}
-	Xmean=0.0 + *n;
-	for(i=0; i< *nL ; i++){
-		Xmean = Xmean * L[i] / *n;
-	}
-	for(i=0; i <= minL ; i++){
-		pp[i]=0.0;
-	}
-	*p = 0.0;
-	if((double) *x > Xmean){
-		i = *x+1;
-		for(; i <= minL; i++){
-			C_dmvhyper_logVal(&i, nL, L, n, &p0, &i0, logVal);
-			pp[i]=p0;
-			if(p0 <= tiny) break;
-			if(i > (*x+1) && (p0/pp[i-1]) <= 0.01) break;  //No improve in precision
+void C_pmvhyper(int *x, int *nL, int *L, int *n, double *p, int *lower, int *logp, int *errorCode){
+	/*
+	x:     number of elements overlap between all subsets
+	nL:    number of subsets
+	L:     subset sizes
+	n:     background size
+	p:     output probability
+	lower: 1, lower tail probability Pr(overlap <= x); 0, upper tail probability Pr(overlap > x)
+	logp:  return log probability
+	*/
+
+    int obs      = *x;
+    int t        = *nL;
+    int N        = *n;
+    int minL     = min(L, t);
+
+    int wantLower = *lower;
+    int wantLog   = *logp;
+
+    int logFlag = 1;
+    double logTail = LOG_ZERO;
+	double log_epsilon = -36.84; // Equivalent to a relative threshold of 1e-16 (machine epsilon)
+    double tmp;
+
+    /*-------------------------------
+      Boundary cases
+    -------------------------------*/
+
+    if (obs < 0) {
+        *p = wantLog ?
+             (wantLower ? LOG_ZERO : 0.0) :
+             (wantLower ? 0.0 : 1.0);
+        return;
+    }
+
+    if (obs > minL) {
+        *p = wantLog ?
+             (wantLower ? 0.0 : LOG_ZERO) :
+             (wantLower ? 1.0 : 0.0);
+        return;
+    }
+
+	/*-------------------------------
+      Compute expected overlap
+    -------------------------------*/
+
+    double mean = (double)L[0];
+
+	for (int i = 1; i < t; i++)
+    	mean *= (double)L[i] / N;
+
+    /*-------------------------------
+      Choose shorter tail
+    -------------------------------*/
+
+    int from, to;
+    int summedLower;
+
+    if (obs <= mean) {
+        from = 0;
+        to = obs;
+        summedLower = 1;
+    } else {
+        from = obs + 1;
+        to = minL;
+        summedLower = 0;
+    }
+
+    /*-------------------------------
+      Accumulate chosen tail
+    -------------------------------*/
+    for (int k = from; k <= to; k++) {
+		if(summedLower > 0){
+			int k2 = obs - k;
+        	C_dmvhyper(&k2, nL, L, n, &tmp, &logFlag, errorCode);
+			// C_dmvhyper_log(&k2, nL, L, n, &tmp, &logFlag, errorCode, logVal);
+		}else{
+			C_dmvhyper(&k, nL, L, n, &tmp, &logFlag, errorCode);
+			// C_dmvhyper_log(&k, nL, L, n, &tmp, &logFlag, errorCode, logVal);
 		}
-		if(i>minL) i=minL;
-		for(j = i; j >= *x+1; j--){ //iteration from smallest to largest; more accurate
-			*p += pp[j];
+		if (*errorCode) {
+            return;
+        }
+		if(k > from){//No improve in precision
+			if(tmp < tiny) break;
+			if (tmp - logTail < log_epsilon) break;
 		}
-		if(*lower > 0) *p = 1.0 - *p;
-	}else{
-		i = *x;
-		for(;i >= 0; i--){
-			C_dmvhyper_logVal(&i, nL, L, n, &p0, &i0, logVal);
-			pp[i]=p0;
-			if(p0 <= tiny) break;
-			if(i < *x && (p0/pp[i+1]) <= 0.01) break;  //No improve in precision
-		}
-		if(i<0) i=0;
-		for(j = i; j <= *x; j++){ //iteration from smallest to largest; more accurate
-			*p += pp[j];
-		}
-		if(*lower == 0) *p = 1.0 - *p;
-	}
-	if (*p > 1) *p = 1.0;
-	if ( *p < 0 ) *p = db_xmin;
-	if(*logp > 0) *p = log(*p);
-	free(pp);
-	free(logVal);
-	return;
+        logTail = log_add(logTail, tmp);
+    }
+
+    /*-------------------------------
+      Convert to requested tail
+    -------------------------------*/
+
+    double logResult;
+
+    if (summedLower == wantLower)
+        logResult = logTail;
+    else
+        logResult = log1mexp(logTail);
+
+    /*-------------------------------
+      Return
+    -------------------------------*/
+
+    if (wantLog)
+        *p = logResult;
+    else
+        *p = (logResult == LOG_ZERO) ? 0.0 : exp(logResult);
 }

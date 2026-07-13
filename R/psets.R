@@ -17,8 +17,8 @@ cpsets <- function(x,L,n,lower.tail=TRUE,log.p=FALSE,simulation.p.value=FALSE,nu
 	}
 	if(simulation.p.value) return(cpsets.simulation(x,L,n,lower.tail,log.p,number.simulations))
 	L=sort(L)
-	res=.C("C_pmvhyper",as.integer(x),length(L),as.integer(L),as.integer(n),as.numeric(0.0),as.integer(lower.tail),as.integer(log.p),as.integer(0L))
-	if(res[[8]]!=0) stop('Unexpected error encountered likely due to insufficient memory.\n')
+	res = .C(C_pmvhyper,as.integer(x),length(L),as.integer(L),as.integer(n),as.numeric(0.0),as.integer(lower.tail),as.integer(log.p), as.integer(0))
+	if(res[[8]]==1) stop('Error in computing p-value\n')
 	res[[5]]
 }
 cpsets.simulation <- function(x,L,n,lower.tail=TRUE,log.p=FALSE,number.simulations=1000000){
@@ -37,5 +37,7 @@ dpsets <- function(x,L,n,log.p=FALSE){
 	nL=length(L)
 	if(nL<2) stop('L should have at least two entries\n')
 	L=sort(L)
-	.C("C_dmvhyper",as.integer(x),length(L),as.integer(L),as.integer(n),as.numeric(0.0),as.integer(log.p))[[5]]
+	res = .C(C_dmvhyper,as.integer(x),length(L),as.integer(L),as.integer(n),as.numeric(0.0),as.integer(log.p),as.integer(0))
+	if(res[[7]]==1) stop('Error in computing p-value\n')
+	res[[5]]
 }

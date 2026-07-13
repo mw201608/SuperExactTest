@@ -1,79 +1,86 @@
 #include "mvhyper.h"
-void C_dmvhyper(int *x, int *nL, int *L, int *n, double *p, int *logp){
-/*
-x:     number of elements overlap between all subsets
-nL:    number of subsets
-L:     subset sizes
-n:     background size
-p:     output probability
-logp:  return log probability
-*/
+void C_dmvhyper(int *x, int *nL, int *L, int *n, double *p, int *logp, int *errorCode) {
+	/*
+	x:     number of elements overlap between all subsets
+	nL:    number of subsets
+	L:     subset sizes
+	n:     background size
+	p:     output probability
+	logp:  return log probability
+	*/
+    int obs  = *x;
+    int t    = *nL;
+    int N    = *n;
+	int minL = min(L, t);
+
 	int i, j, k, l;
-	int i0=0;
-	int aSize=max(L,*nL) - *x + 1;
+	int aSize = max(L,t) - obs + 1;
 	double *f1, *f0;
 	double temp;
-	int minL=min(L,*nL);
+
+    /* ── trivial cases ────────────────────────────────────────────────── */
+    if (obs < 0 || obs > minL) {
+        *p = (*logp) ? LOG_ZERO : 0.0;
+        return;
+    }
+    if (t == 2) {
+        *p = C_dhyper(obs, L[0], N - L[0], L[1], *logp);
+        return;
+    }
+
 	f1 = malloc(sizeof(double)*aSize);
 	f0 = malloc(sizeof(double)*aSize);
-	if(*nL == 2){
-		*p=C_dhyper(*x,L[0],*n-L[0],L[1],*logp);
+	if (!f1 || !f0) {
 		free(f1);
 		free(f0);
+		*errorCode = 1;
 		return;
 	}
-	for(i=0; i < aSize; i++) f1[i]=(double) 0;
-	*p=0;
+	for(i = 0; i < aSize; i++) f1[i] = LOG_ZERO;
 	//from inner-most to outer-most
-	for(i=1; i <= *nL - 1; i++){
-		if(i==1){
-			l = *x;
-			f1[0]=C_dhyper(*x,l,*n - l,L[*nL - 1],i0);
-			for(l = *x +1; l <= min2(minL,*n + *x - L[*nL - 1]); l++){
-				f1[l - *x] = f1[l - *x -1] * ((double)(*n - l+1-L[*nL - 1] + *x)/(double)(l - *x))  * ((double)l/(double)(*n -l+1));
+	l = obs;
+	f1[0] = C_log_dhyper(obs, l, N - l, L[t - 1]);
+	for(l = obs + 1; l <= min2(minL,N + obs - L[t - 1]); l++){ //f1(l) = f1(l-1) * (n-l+1-L[nL-1]+x)/(l-x) * l/(n-l+1)
+		f1[l - obs] = f1[l - obs -1] + log((double)(N - l + 1 - L[t - 1] + obs) / (double)(l - obs) * (double)l / (double)(N - l + 1));
+	}
+	memcpy ( f0, f1, aSize * sizeof((double) 0) );
+	for(i = 2; i <= t - 2; i++){
+		for(k = obs; k <= minL; k++){ //calculate f_l(k)
+			l = max2(obs, k + L[t - i] - N);
+			temp = C_log_dhyper(l, k, N -k, L[t - i]);
+			f1[k - obs] = temp + f0[l - obs];
+			for(l = l + 1; l <= k; l++){ //sum over l for each k
+				temp = temp + log((double)(L[t - i]-l+1) / (double)(l) * (double)(k-l+1) / (double)(N - L[t - i]-k+l));
+				f1[k - obs] = log_add(f1[k - obs], temp + f0[l - obs]);
 			}
-			continue;
 		}
 		memcpy ( f0, f1, aSize * sizeof((double) 0) );
-		if(*nL - i>=2){
-			for(k = *x; k <= minL;k++){ //calculate f_l(k)
-				f1[k - *x]=0;
-				l=max2(*x,k+L[*nL - i] - *n);
-				temp = C_dhyper(l,L[*nL - i],*n - L[*nL - i],k,i0);
-				f1[k - *x] += temp * f0[l - *x];
-				for(l=l+1;l <= k; l++){ //sum over l for each k
-					temp = temp * ((double)(L[*nL - i]-l+1)/(double)l) * ((double)(k-l+1) /(double)(*n - L[*nL - i]-k+l));
-					f1[k - *x] += temp * f0[l - *x];
-				}
-			}
-			continue;
-		}
-		//final integration
-		j=max2(*x,L[1]+L[0] - *n);
-		temp=C_dhyper(j,L[1],*n - L[1],L[0],i0);
-		*p += temp * f1[j - *x];
-		for(j=j+1;j <= minL;j++){
-			temp=temp * ((double)(L[1]-j+1)/(double)j) * ((double)(L[0]-j+1) /(double)(*n - L[1]-L[0]+j));
-			*p += temp * f1[j - *x];
-		}
 	}
-	if (*p > 1) *p = 1.0;
-	if ( *p < 0 ) *p = db_xmin;
-	if(*logp>0) *p = log(*p);
+	//final integration
+	j = max2(obs, L[1]+L[0] - N);
+	temp = C_log_dhyper(j, L[1], N - L[1], L[0]);
+	double log_p = temp + f1[j - obs];
+	for(j=j+1;j <= minL;j++){
+		temp = temp + log((double)(L[1]-j+1) / (double)(j) * (double)(L[0]-j+1) / (double)(N - L[1]-L[0]+j));
+		log_p = log_add(log_p, temp + f1[j - obs]);
+	}
+    double prob;
+    if (log_p == LOG_ZERO || isinf(log_p)) {
+		if (*logp){
+			prob = LOG_ZERO;
+		}else{
+        	prob = 0.0;
+		}
+    } else {
+		if(log_p > 0.0) log_p = 0.0;
+		if (*logp){
+			prob = log_p;
+		}else{
+			prob = exp(log_p);
+		}
+    }
+	*p = prob;
 	free(f1);
 	free(f0);
 	return;
-}
-double C_dhyper(int x, int w, int b, int n, int logp){
-//probability of getting x white balls out of n draws from an urn with w white balls and b black balls
-	double result;
-	if(x>w || x>n || b+x<n){
-		result=0;
-		if(logp==1) result=log(result);
-	}else{
-		result=C_logChoose(w,x)+C_logChoose(b,n-x);
-		result=result-C_logChoose(w+b,n);
-		if(logp==0) result=exp(result);
-	}
-	return(result);
 }
