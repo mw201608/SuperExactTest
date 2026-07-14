@@ -213,7 +213,7 @@ For example, to visualize the analysis result, we can plot the analysis results 
 plot(res, sort.by="size", margin=c(2,2,2,2), color.scale.pos=c(0.85,1), legend.pos=c(0.9,0.15))
 ```
 
-![A circular plot visualizing all possible intersections and the corresponding statistics amongst *cis*-eQTL gene sets.](figure/fig1-1.png)
+![A circular plot visualizing all possible intersections and the corresponding statistics amongst *cis*-eQTL gene sets.](figure/fig1-1.svg)
 
 The four tracks in the middle represent the four gene sets, with individual blocks showing "presence" (green) or "absence" (grey) of the gene sets in each intersection. To denote the four gene sets with different colors, set argument `color.on` to NULL or provide it with a vector of user-defined colors.
 The height of the bars in the outer layer is proportional to the intersection sizes, as indicated by the numbers on the top of the bars. The color intensity of the bars represents the P value significance of the intersections.
@@ -227,7 +227,7 @@ For example, we can visualize the results in a landscape (matrix) layout as show
 plot(res, Layout="landscape", degree=2:4, sort.by="size", margin=c(0.5,5,1,2))
 ```
 
-![A bar chart illustrating all possible intersections among *cis*-eQTL gene sets in a matrix layout.](figure/fig2-1.png)
+![A bar chart illustrating all possible intersections among *cis*-eQTL gene sets in a matrix layout.](figure/fig2-1.svg)
 
 The matrix of solid and empty circles at the bottom illustrates the "presence" (solid green) or "absence" (empty) 
 of the gene sets in each intersection. The numbers to the right of the matrix are set sizes. The colored bars on the top of the matrix represent the intersection sizes with the color intensity showing the P value significance.
