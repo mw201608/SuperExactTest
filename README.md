@@ -31,7 +31,7 @@ input=lapply(c(40,60,80,200),function(x,s) sample(s,x),s=r_strings)
 Result=supertest(input,n=n)
 #Plot the intersections with a split y-axis and 
 #show elements of the intersections with no more than 20 elements
-#png('examples/ex1.png',width=2000,height=2000,res=300)
+#svg('examples/ex1.svg',width=7,height=7)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
 	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
@@ -39,11 +39,11 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	color.expected.overlap='red')
 #dev.off()
 ```
-<img src="examples/ex1.png" width="600" alt="sample output" />
+<img src="examples/ex1.svg" width="600" alt="sample output" />
 
 Assign discrete colors to denote the sets that are involved in each intersection by setting `color.on` to NULL or a vector of colors.
 ```
-#png('examples/ex1color.png',width=2000,height=2000,res=300)
+#svg('examples/ex1color.svg',width=7,height=7)
 plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 	bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
 	elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
@@ -52,7 +52,7 @@ plot(Result, Layout="landscape", sort.by="size", keep=FALSE,
 #dev.off()
 ```
 
-<img src="examples/ex1color.png" width="600" alt="sample output" />
+<img src="examples/ex1color.svg" width="600" alt="sample output" />
 
 #### 2 Sort and/or subset intersection bars for plotting
 As of version 1.0.7, we can change the order of the intersection bars in a customized way through option `sort.by`.
@@ -65,7 +65,7 @@ order2=order1[c(1:3,5,4,6:length(order1))]
 print(order1)
 print(order2)
 #Now plot with the new order
-#png('examples/ex2.png',width=2000,height=2000,res=300)
+#svg('examples/ex2.svg',width=7,height=7)
 plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
         elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
@@ -73,13 +73,13 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         color.expected.overlap='red', color.on = NULL)
 #dev.off()
 ```
-<img src="examples/ex2.png" width="600" alt="sample output" />
+<img src="examples/ex2.svg" width="600" alt="sample output" />
 
 
 With this option `sort.by`, we can also show a subset of the intersection bars easily. Eg, let us plot the 10 largest overlaps.
 ```
 order3=order1[1:10]
-#png('examples/ex2b.png',width=2000,height=2000,res=300)
+#svg('examples/ex2b.svg',width=7,height=7)
 plot(Result, Layout="landscape", sort.by=order3,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
         elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
@@ -87,12 +87,12 @@ plot(Result, Layout="landscape", sort.by=order3,
         color.expected.overlap='red', color.on = NULL)
 #dev.off()
 ```
-<img src="examples/ex2b.png" width="600" alt="sample output" />
+<img src="examples/ex2b.svg" width="600" alt="sample output" />
 
 #### 3 Flip the bars upside down
 We can also flip the bars upside down using option flip.vertical=TRUE.
 ```
-#png('examples/ex3.png',width=2000,height=2000,res=300)
+#svg('examples/ex3.svg',width=7,height=7)
 plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
         elements.list=subset(summary(Result)$Table,Observed.Overlap <= 20),
@@ -100,12 +100,12 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         color.expected.overlap='red', color.on = NULL, flip.vertical=TRUE)
 #dev.off()
 ```
-<img src="examples/ex3.png" width="600" alt="sample output" />
+<img src="examples/ex3.svg" width="600" alt="sample output" />
 
 #### 4 Show fold enrichment
 Show fold enrichment rather than overlp size on top of the bars (since v1.0.7.1).
 ```
-#png('examples/ex4.png',width=2000,height=2000,res=300)
+#svg('examples/ex4.svg',width=7,height=7)
 plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         bar.split=c(70,180), show.elements=TRUE, elements.cex=0.7,
 		show.fold.enrichment=TRUE,
@@ -114,12 +114,12 @@ plot(Result, Layout="landscape", sort.by=order2, keep=FALSE,
         color.expected.overlap='red', color.on = NULL)
 #dev.off()
 ```
-<img src="examples/ex4.png" width="600" alt="sample output" />
+<img src="examples/ex4.svg" width="600" alt="sample output" />
 
 #### 5 Place multiple SuperExactTest plots on the same page
 We can combine multiple SuperExactTest plots on the same page by setting new.gridPage = FALSE. For example, to arrange two SuperExactTest figures side by side, we can:
 ```
-#png('examples/ex5.png',width=4000,height=2000,res=300)
+#svg('examples/ex5.svg',width=12,height=6)
 grid.newpage()
 vp0 <- viewport(layout = grid.layout(1, 2))
 vp1 <- viewport(layout.pos.col = 1, layout.pos.row = 1, name = "plot_left")
@@ -139,4 +139,4 @@ plot(Result, Layout="circular", sort.by='size', keep=FALSE,
         title = 'Figure B. Circular layout', new.gridPage = FALSE)
 #dev.off()
 ```
-<img src="examples/ex5.png" width="1000" alt="sample output" />
+<img src="examples/ex5.svg" width="1000" alt="sample output" />
