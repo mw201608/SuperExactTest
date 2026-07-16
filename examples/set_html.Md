@@ -241,10 +241,9 @@ results in a circular layout as shown in the following figure:
     plot(res, sort.by="size", margin=c(2,2,2,2), color.scale.pos=c(0.85,1), legend.pos=c(0.9,0.15))
 
 ![A circular plot visualizing all possible intersections and the
-corresponding statistics amongst *cis*-eQTL gene sets. For convenience,
-the minimum p value is capped at
-1.0E-320.](figure/fig1-1.svg)
+corresponding statistics amongst *cis*-eQTL gene sets. ](figure/fig1-1.svg)
 
+The circular plot summarizes all possible intersections among the four gene sets.
 The four tracks in the middle represent the four gene sets, with
 individual blocks showing “presence” (green) or “absence” (grey) of the
 gene sets in each intersection. To denote the four gene sets with
@@ -252,7 +251,7 @@ different colors, set argument `color.on` to NULL or provide it with a
 vector of user-defined colors. The height of the bars in the outer layer
 is proportional to the intersection sizes, as indicated by the numbers
 on the top of the bars. The color intensity of the bars represents the P
-value significance of the intersections.
+value significance of the intersections. For convenience, the minimum p value is capped at 1.0E-320.
 
 As the option name suggests, `sort.by="size"` instructs the
 intersections to be sorted by size. Users are flexible to use different
