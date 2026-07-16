@@ -35,6 +35,13 @@ Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015). Efficient Test and Visualiza
 \dontrun{
 #set up fake data
 x=list(S1=letters[1:20], S2=letters[10:26], S3=sample(letters,10), S4=sample(letters,10))
-MSET(x, 26, FALSE)
+MSET(x, n = 26, lower.tail = FALSE)
+##Example of using log.p option for extremely low p values
+data(cis.eqtls)
+total = 18196
+#Calculate the significance of the intersection among four cis-eQTLs gene sets
+MSET(cis.eqtls, n = total, lower.tail = FALSE, log.p = FALSE)
+#Calculate the significance in log space
+MSET(cis.eqtls, n = total, lower.tail = FALSE, log.p = TRUE)
 }
 }

@@ -1,8 +1,8 @@
 Package: SuperExactTest
 Type: Package
 Title: Exact Test and Visualization of Multi-Set Intersections
-Version: 1.2.0
-Date: 2026-07-10
+Version: 1.2.1
+Date: 2026-07-16
 Authors@R: c(
     person("Minghui", "Wang",    role = c("aut","cre"), email = "minghui.wang@mssm.edu"),
     person("Yongzhong", "Zhao",  role = "aut"),

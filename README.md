@@ -1,6 +1,6 @@
 ## SuperExactTest [![CRAN](http://www.r-pkg.org/badges/version/SuperExactTest)](https://cran.r-project.org/package=SuperExactTest) [![Downloads](http://cranlogs.r-pkg.org/badges/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest) [![Total downloads]( https://cranlogs.r-pkg.org/badges/grand-total/SuperExactTest?color=brightgreen)](http://www.r-pkg.org/pkg/SuperExactTest)
 
-#### Current version 1.2.0
+#### Current version 1.2.1
 
 ### Description
 `SuperExactTest` is an R package for statistical testing and visualization of mult-set intersections.
@@ -14,7 +14,7 @@ To install the latest update from here in `github`, run `devtools::install_githu
 [Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.](https://www.nature.com/articles/srep16923)
 
 ### Vignette
-Detailed description about the package and sample analysis code is available from `vignette("set_html",package="SuperExactTest")` ([link](examples/set_html.Md)) after installation.
+Detailed description about the package and sample analysis code is available from `vignette("set_html",package="SuperExactTest")`after installation. A pre-built web version is available from ([this link](examples/set_html.Md)).
 
 ### SuperExactTest shiny
 A shiny application has been deployed at [shinyapps.io](https://network.shinyapps.io/SuperExactTest/) (see also [github](https://github.com/mw201608/SuperExactTest.shiny)), allowing users to run and visualize `SuperExactTest` analysis online.
