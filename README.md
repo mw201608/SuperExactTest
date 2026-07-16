@@ -11,10 +11,12 @@
 To install the latest update from here in `github`, run `devtools::install_github("mw201608/SuperExactTest")` in `R`.
 
 ### Reference
-[Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.](https://www.nature.com/articles/srep16923)
+> [Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923.](https://www.nature.com/articles/srep16923)
 
 ### Vignette
-Detailed description about the package and sample analysis code is available from `vignette("set_html",package="SuperExactTest")`after installation. A pre-built web version is available from ([this link](examples/set_html.Md)).
+Detailed description about the package and sample analysis code is available from `vignette("set_html",package="SuperExactTest")`after installation.
+
+A pre-built web version is available from [this link](examples/set_html.Md).
 
 ### SuperExactTest shiny
 A shiny application has been deployed at [shinyapps.io](https://network.shinyapps.io/SuperExactTest/) (see also [github](https://github.com/mw201608/SuperExactTest.shiny)), allowing users to run and visualize `SuperExactTest` analysis online.

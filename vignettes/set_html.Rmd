@@ -157,6 +157,6 @@ write.csv(summary(res)$Table, file="summary.table.csv", row.names=FALSE)
 ```
 
 # References
-Gibbs et al. (2010) Abundant Quantitative Trait Loci Exist for DNA Methylation and Gene Expression in Human Brain. PLoS Genetics 6: e1000952.
+> Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. Scientific Reports 5: 16923.
 
-Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. Scientific Reports 5: 16923.
+> Gibbs et al. (2010) Abundant Quantitative Trait Loci Exist for DNA Methylation and Gene Expression in Human Brain. PLoS Genetics 6: e1000952.

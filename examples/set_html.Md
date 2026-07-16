@@ -243,7 +243,7 @@ results in a circular layout as shown in the following figure:
 ![A circular plot visualizing all possible intersections and the
 corresponding statistics amongst *cis*-eQTL gene sets. For convenience,
 the minimum p value is capped at
-1.0E-320.](examples/figure/fig1-1.svg)
+1.0E-320.](figure/fig1-1.svg)
 
 The four tracks in the middle represent the four gene sets, with
 individual blocks showing “presence” (green) or “absence” (grey) of the
@@ -266,7 +266,7 @@ intersections among 2 to 4 sets by option `degree = 2:4`:
 
 ![A bar chart illustrating all possible intersections among *cis*-eQTL
 gene sets in a matrix
-layout.](examples/figure//fig2-1.png)
+layout.](figure/fig2-1.svg)
 
 The matrix of solid and empty circles at the bottom illustrates the
 “presence” (solid green) or “absence” (empty) of the gene sets in each
@@ -328,10 +328,7 @@ To tabulate the `summary` result into a file, use command:
 
 References
 ==========
+> Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. Scientific Reports 5: 16923.
 
-Gibbs et al. (2010) Abundant Quantitative Trait Loci Exist for DNA
-Methylation and Gene Expression in Human Brain. PLoS Genetics 6:
-e1000952.
+> Gibbs et al. (2010) Abundant Quantitative Trait Loci Exist for DNA Methylation and Gene Expression in Human Brain. PLoS Genetics 6:e1000952.
 
-Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and
-Visualization of Multi-Set Intersections. Scientific Reports 5: 16923.
