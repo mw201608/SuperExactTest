@@ -251,7 +251,7 @@ different colors, set argument `color.on` to NULL or provide it with a
 vector of user-defined colors. The height of the bars in the outer layer
 is proportional to the intersection sizes, as indicated by the numbers
 on the top of the bars. The color intensity of the bars represents the P
-value significance of the intersections. For convenience, the minimum p value is capped at 1.0E-320.
+value significance of the intersections. For convenience, the minimum p value is capped at `1.0E-320`.
 
 As the option name suggests, `sort.by="size"` instructs the
 intersections to be sorted by size. Users are flexible to use different
