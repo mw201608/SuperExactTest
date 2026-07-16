@@ -21,7 +21,7 @@ If you use `SuperExactTest` in published work, please cite:
 
 > Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and
 > Visualization of Multi-Set Intersections. *Scientific Reports* 5:
-> 16923.
+> 16923. DOI: [10.1038/srep16923](https://doi.org/10.1038/srep16923)
 
 Case study
 ----------
@@ -327,7 +327,7 @@ To tabulate the `summary` result into a file, use command:
 
 References
 ==========
-> Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. Scientific Reports 5: 16923.
+> Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. Scientific Reports 5: 16923. DOI: [10.1038/srep16923](https://doi.org/10.1038/srep16923)
 
 > Gibbs et al. (2010) Abundant Quantitative Trait Loci Exist for DNA Methylation and Gene Expression in Human Brain. PLoS Genetics 6:e1000952.
 
