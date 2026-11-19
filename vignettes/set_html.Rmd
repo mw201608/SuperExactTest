@@ -7,7 +7,7 @@ output:
 vignette: >
   %\VignetteIndexEntry{SuperExactTest User Guide}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8](inputenc)
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}

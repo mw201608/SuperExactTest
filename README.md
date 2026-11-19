@@ -8,7 +8,7 @@
 ### Installation
 `SuperExactTest` is available from `CRAN` so the simplest way to install in `R` is by running `install.packages("SuperExactTest")`.
 
-To install the latest update from here in `github`, run `devtools::install_github("mw201608/SuperExactTest")` in `R`.
+To install the latest update from here in `github`, run `pak:::pak("mw201608/SuperExactTest")` in `R`.
 
 ### Reference
 > Minghui Wang, Yongzhong Zhao, and Bin Zhang (2015) Efficient Test and Visualization of Multi-Set Intersections. *Scientific Reports* 5: 16923. DOI: [10.1038/srep16923](https://doi.org/10.1038/srep16923)
